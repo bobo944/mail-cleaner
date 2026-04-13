@@ -5,259 +5,109 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mail Cleaner</title>
   <script src="https://cdn.jsdelivr.net/npm/@azure/msal-browser@3.28.0/lib/msal-browser.min.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --bg:        #f5f5f3;
-      --bg-card:   #ffffff;
-      --bg-sec:    #f1efe8;
-      --border:    rgba(0,0,0,0.12);
-      --border-md: rgba(0,0,0,0.22);
-      --text:      #1a1a18;
-      --text-sec:  #5f5e5a;
-      --text-hint: #888780;
-      --blue:      #185FA5;
-      --blue-light:#E6F1FB;
-      --blue-dark: #0C447C;
-      --red:       #A32D2D;
-      --red-light: #FCEBEB;
-      --green:     #3B6D11;
-      --green-light:#EAF3DE;
-      --radius-md: 8px;
-      --radius-lg: 12px;
+      --bg: #f5f5f3; --bg-card: #ffffff; --bg-sec: #f1efe8;
+      --border: rgba(0,0,0,0.12); --border-md: rgba(0,0,0,0.22);
+      --text: #1a1a18; --text-sec: #5f5e5a; --text-hint: #888780;
+      --blue: #185FA5; --blue-light: #E6F1FB; --blue-dark: #0C447C;
+      --red: #A32D2D; --red-light: #FCEBEB;
+      --green: #3B6D11; --green-light: #EAF3DE;
+      --radius-md: 8px; --radius-lg: 12px;
     }
-
     @media (prefers-color-scheme: dark) {
       :root {
-        --bg:        #1c1c1a;
-        --bg-card:   #252523;
-        --bg-sec:    #2c2c2a;
-        --border:    rgba(255,255,255,0.10);
-        --border-md: rgba(255,255,255,0.20);
-        --text:      #e8e6df;
-        --text-sec:  #b4b2a9;
-        --text-hint: #888780;
-        --blue-light:#0C447C;
-        --blue-dark: #B5D4F4;
-        --red-light: #501313;
-        --green-light:#173404;
+        --bg: #1c1c1a; --bg-card: #252523; --bg-sec: #2c2c2a;
+        --border: rgba(255,255,255,0.10); --border-md: rgba(255,255,255,0.20);
+        --text: #e8e6df; --text-sec: #b4b2a9;
+        --blue-light: #0C447C; --blue-dark: #B5D4F4;
+        --red-light: #501313; --green-light: #173404;
       }
     }
-
-    html, body {
-      height: 100%;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      font-size: 15px;
-      line-height: 1.5;
-    }
-
+    html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.5; }
     .page { min-height: 100vh; display: flex; flex-direction: column; }
-
-    /* ── Top bar ── */
-    .topbar {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 14px 24px;
-      background: var(--bg-card);
-      border-bottom: 0.5px solid var(--border);
-    }
-    .logo { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 600; color: var(--text); text-decoration: none; }
-    .logo-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--blue); }
-
-    .user-pill {
-      display: flex; align-items: center; gap: 8px;
-      background: var(--bg-sec); border: 0.5px solid var(--border);
-      border-radius: 20px; padding: 5px 14px 5px 6px;
-      font-size: 12px; color: var(--text-sec); cursor: pointer;
-      transition: background .15s;
-    }
-    .user-pill:hover { background: var(--border); }
-    .avatar {
-      width: 24px; height: 24px; border-radius: 50%;
-      background: var(--blue-light); color: var(--blue-dark);
-      font-size: 10px; font-weight: 600;
-      display: flex; align-items: center; justify-content: center;
-    }
-
-    /* ── Screens ── */
     .screen { display: none; flex: 1; }
     .screen.active { display: flex; flex-direction: column; }
+    .topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; background: var(--bg-card); border-bottom: 0.5px solid var(--border); }
+    .logo { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 600; color: var(--text); }
+    .logo-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--blue); }
+    .user-pill { display: flex; align-items: center; gap: 8px; background: var(--bg-sec); border: 0.5px solid var(--border); border-radius: 20px; padding: 5px 14px 5px 6px; font-size: 12px; color: var(--text-sec); cursor: pointer; transition: background .15s; }
+    .user-pill:hover { background: var(--border); }
+    .avatar { width: 24px; height: 24px; border-radius: 50%; background: var(--blue-light); color: var(--blue-dark); font-size: 10px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
+    .avatar.google { background: #fce8e6; color: #c5221f; }
 
-    /* ── Login screen ── */
-    #screen-login {
-      align-items: center; justify-content: center; padding: 40px 20px;
-    }
-    .login-card {
-      background: var(--bg-card);
-      border: 0.5px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 40px 36px;
-      width: 100%; max-width: 400px;
-      text-align: center;
-    }
+    /* Login screen */
+    #screen-login { align-items: center; justify-content: center; padding: 40px 20px; }
+    .login-card { background: var(--bg-card); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 40px 36px; width: 100%; max-width: 420px; text-align: center; }
     .login-card h1 { font-size: 22px; font-weight: 600; margin-bottom: 8px; }
     .login-card p { font-size: 14px; color: var(--text-sec); margin-bottom: 28px; line-height: 1.6; }
-
-    .ms-btn {
-      display: flex; align-items: center; justify-content: center; gap: 10px;
-      width: 100%; padding: 11px 18px;
-      background: var(--blue); color: #E6F1FB;
-      border: none; border-radius: var(--radius-md);
-      font-size: 14px; font-weight: 600; cursor: pointer;
-      transition: opacity .15s;
-    }
+    .provider-btns { display: flex; flex-direction: column; gap: 10px; }
+    .ms-btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 11px 18px; background: var(--blue); color: #E6F1FB; border: none; border-radius: var(--radius-md); font-size: 14px; font-weight: 600; cursor: pointer; transition: opacity .15s; }
     .ms-btn:hover { opacity: .88; }
     .ms-btn svg { width: 18px; height: 18px; flex-shrink: 0; }
+    .google-btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 11px 18px; background: var(--bg-card); color: var(--text); border: 0.5px solid var(--border-md); border-radius: var(--radius-md); font-size: 14px; font-weight: 600; cursor: pointer; transition: background .15s; }
+    .google-btn:hover { background: var(--bg-sec); }
+    .google-btn svg { width: 18px; height: 18px; flex-shrink: 0; }
+    .divider { display: flex; align-items: center; gap: 12px; margin: 4px 0; color: var(--text-hint); font-size: 12px; }
+    .divider::before, .divider::after { content: ''; flex: 1; height: 0.5px; background: var(--border); }
+    .consent-note { font-size: 11px; color: var(--text-hint); margin-top: 14px; line-height: 1.6; }
 
-    .consent-note {
-      font-size: 11px; color: var(--text-hint);
-      margin-top: 14px; line-height: 1.6;
-    }
-
-    /* ── Loading screen ── */
+    /* Loading */
     #screen-loading { align-items: center; justify-content: center; }
     .loading-wrap { text-align: center; padding: 60px 20px; }
-    .spinner {
-      width: 30px; height: 30px;
-      border: 2.5px solid var(--border-md);
-      border-top-color: var(--blue);
-      border-radius: 50%;
-      animation: spin .7s linear infinite;
-      margin: 0 auto 16px;
-    }
+    .spinner { width: 30px; height: 30px; border: 2.5px solid var(--border-md); border-top-color: var(--blue); border-radius: 50%; animation: spin .7s linear infinite; margin: 0 auto 16px; }
     @keyframes spin { to { transform: rotate(360deg); } }
     .loading-wrap p { font-size: 14px; color: var(--text-sec); }
 
-    /* ── Senders screen ── */
-    #screen-senders { padding: 28px 24px; }
-    .section-label {
-      font-size: 11px; font-weight: 600; color: var(--text-hint);
-      text-transform: uppercase; letter-spacing: .07em;
-      margin-bottom: 14px;
-    }
-
-    .sender-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-
-    .sender-card {
-      background: var(--bg-card);
-      border: 0.5px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 14px 16px;
-      cursor: pointer;
-      transition: border-color .15s, background .15s;
-      user-select: none;
-    }
+    /* Senders */
+    #screen-senders { padding: 0; }
+    .senders-body { padding: 28px 24px 100px; flex: 1; }
+    .section-label { font-size: 11px; font-weight: 600; color: var(--text-hint); text-transform: uppercase; letter-spacing: .07em; margin-bottom: 14px; }
+    .provider-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; padding: 3px 10px; border-radius: 20px; margin-bottom: 16px; font-weight: 500; }
+    .provider-badge.microsoft { background: var(--blue-light); color: var(--blue-dark); }
+    .provider-badge.google { background: #fce8e6; color: #c5221f; }
+    .sender-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px; margin-bottom: 20px; }
+    .sender-card { background: var(--bg-card); border: 0.5px solid var(--border); border-radius: var(--radius-md); padding: 14px 16px; cursor: pointer; transition: border-color .15s, background .15s; user-select: none; }
     .sender-card:hover { border-color: var(--border-md); }
-    .sender-card.selected {
-      border: 1.5px solid var(--blue);
-      background: var(--blue-light);
-    }
+    .sender-card.selected { border: 1.5px solid var(--blue); background: var(--blue-light); }
     .sender-card.selected .sender-name { color: var(--blue-dark); }
-    .sender-card.selected .sender-domain,
-    .sender-card.selected .sender-count { color: var(--blue); }
-
-    .sender-name {
-      font-size: 13px; font-weight: 600; color: var(--text);
-      margin-bottom: 3px;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    }
-    .sender-domain {
-      font-size: 11px; color: var(--text-hint); margin-bottom: 8px;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    }
+    .sender-card.selected .sender-domain, .sender-card.selected .sender-count { color: var(--blue); }
+    .sender-name { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .sender-domain { font-size: 11px; color: var(--text-hint); margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .sender-count { font-size: 11px; color: var(--text-sec); }
-    .count-dot {
-      display: inline-block; width: 6px; height: 6px;
-      border-radius: 50%; background: var(--border-md);
-      margin-right: 5px; vertical-align: middle;
-    }
+    .count-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--border-md); margin-right: 5px; vertical-align: middle; }
     .sender-card.selected .count-dot { background: var(--blue); }
-
-    /* ── Action bar ── */
-    .action-bar {
-      display: flex; align-items: center; justify-content: space-between;
-      background: var(--bg-card);
-      border: 0.5px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 12px 18px;
-      position: sticky; bottom: 16px;
-    }
+    .action-bar { display: flex; align-items: center; justify-content: space-between; background: var(--bg-card); border: 0.5px solid var(--border); border-radius: var(--radius-md); padding: 12px 18px; position: sticky; bottom: 16px; margin: 0 24px 24px; }
     .sel-count { font-size: 13px; color: var(--text-sec); }
     .sel-count strong { color: var(--text); }
-
-    .delete-btn {
-      padding: 9px 22px;
-      background: var(--red); color: var(--red-light);
-      border: none; border-radius: var(--radius-md);
-      font-size: 13px; font-weight: 600; cursor: pointer;
-      transition: opacity .15s;
-    }
+    .delete-btn { padding: 9px 22px; background: var(--red); color: var(--red-light); border: none; border-radius: var(--radius-md); font-size: 13px; font-weight: 600; cursor: pointer; transition: opacity .15s; }
     .delete-btn:disabled { opacity: .35; cursor: not-allowed; }
     .delete-btn:not(:disabled):hover { opacity: .88; }
 
-    /* ── Result screen ── */
+    /* Result */
     #screen-result { align-items: center; justify-content: center; padding: 40px 20px; }
-    .result-card {
-      background: var(--bg-card);
-      border: 0.5px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 36px 32px;
-      width: 100%; max-width: 440px;
-      text-align: center;
-    }
-    .result-icon {
-      width: 48px; height: 48px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 18px;
-    }
+    .result-card { background: var(--bg-card); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 36px 32px; width: 100%; max-width: 440px; text-align: center; }
+    .result-icon { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; }
     .result-icon.success { background: var(--green-light); }
-    .result-icon.error   { background: var(--red-light); }
+    .result-icon.error { background: var(--red-light); }
     .result-card h2 { font-size: 18px; font-weight: 600; margin-bottom: 6px; }
-    .result-card p  { font-size: 13px; color: var(--text-sec); line-height: 1.6; margin-bottom: 20px; }
-
-    .deleted-list {
-      background: var(--bg-sec);
-      border-radius: var(--radius-md);
-      padding: 10px 14px; margin-bottom: 20px;
-      text-align: left;
-    }
-    .deleted-list div {
-      font-size: 12px; color: var(--text-sec);
-      padding: 4px 0;
-      border-bottom: 0.5px solid var(--border);
-      display: flex; justify-content: space-between; align-items: center;
-    }
+    .result-card p { font-size: 13px; color: var(--text-sec); line-height: 1.6; margin-bottom: 20px; }
+    .deleted-list { background: var(--bg-sec); border-radius: var(--radius-md); padding: 10px 14px; margin-bottom: 20px; text-align: left; }
+    .deleted-list div { font-size: 12px; color: var(--text-sec); padding: 4px 0; border-bottom: 0.5px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
     .deleted-list div:last-child { border-bottom: none; }
-    .status-ok   { color: var(--green); font-weight: 600; font-size: 11px; }
-    .status-fail { color: var(--red);   font-weight: 600; font-size: 11px; }
-
-    .back-btn {
-      padding: 9px 22px; background: transparent;
-      border: 0.5px solid var(--border-md);
-      border-radius: var(--radius-md);
-      font-size: 13px; color: var(--text); cursor: pointer;
-      transition: background .15s;
-    }
+    .status-ok { color: var(--green); font-weight: 600; font-size: 11px; }
+    .status-fail { color: var(--red); font-weight: 600; font-size: 11px; }
+    .back-btn { padding: 9px 22px; background: transparent; border: 0.5px solid var(--border-md); border-radius: var(--radius-md); font-size: 13px; color: var(--text); cursor: pointer; transition: background .15s; }
     .back-btn:hover { background: var(--bg-sec); }
-
-    .empty-state {
-      grid-column: 1 / -1;
-      text-align: center; padding: 40px 20px;
-      font-size: 14px; color: var(--text-sec);
-    }
+    .empty-state { grid-column: 1 / -1; text-align: center; padding: 40px 20px; font-size: 14px; color: var(--text-sec); }
   </style>
 </head>
 <body>
 <div class="page">
 
-  <!-- ═══ LOGIN ═══ -->
+  <!-- LOGIN -->
   <div class="screen active" id="screen-login">
     <div class="topbar">
       <div class="logo"><div class="logo-dot"></div>Mail cleaner</div>
@@ -265,22 +115,34 @@
     <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:40px 20px;">
       <div class="login-card">
         <h1>Clean your inbox</h1>
-        <p>Sign in with your Microsoft account to see which companies are sending you emails — then remove them in one click.</p>
-        <button class="ms-btn" onclick="startLogin()">
-          <svg viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg">
-            <rect x="1"  y="1"  width="9" height="9" fill="#F25022"/>
-            <rect x="11" y="1"  width="9" height="9" fill="#7FBA00"/>
-            <rect x="1"  y="11" width="9" height="9" fill="#00A4EF"/>
-            <rect x="11" y="11" width="9" height="9" fill="#FFB900"/>
-          </svg>
-          Sign in with Microsoft
-        </button>
+        <p>Sign in to see which companies are emailing you — then remove them in one click.</p>
+        <div class="provider-btns">
+          <button class="ms-btn" onclick="startMicrosoftLogin()">
+            <svg viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg">
+              <rect x="1"  y="1"  width="9" height="9" fill="#F25022"/>
+              <rect x="11" y="1"  width="9" height="9" fill="#7FBA00"/>
+              <rect x="1"  y="11" width="9" height="9" fill="#00A4EF"/>
+              <rect x="11" y="11" width="9" height="9" fill="#FFB900"/>
+            </svg>
+            Sign in with Microsoft
+          </button>
+          <div class="divider">or</div>
+          <button class="google-btn" onclick="startGoogleLogin()">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+            </svg>
+            Sign in with Google
+          </button>
+        </div>
         <p class="consent-note">You will be asked to allow this app to read and delete emails. No data leaves your session.</p>
       </div>
     </div>
   </div>
 
-  <!-- ═══ LOADING ═══ -->
+  <!-- LOADING -->
   <div class="screen" id="screen-loading">
     <div class="topbar">
       <div class="logo"><div class="logo-dot"></div>Mail cleaner</div>
@@ -291,7 +153,7 @@
     </div>
   </div>
 
-  <!-- ═══ SENDERS ═══ -->
+  <!-- SENDERS -->
   <div class="screen" id="screen-senders">
     <div class="topbar">
       <div class="logo"><div class="logo-dot"></div>Mail cleaner</div>
@@ -301,21 +163,18 @@
         <span style="color:var(--text-hint);font-size:11px;margin-left:2px">· sign out</span>
       </div>
     </div>
-    <div style="padding:28px 24px 100px;flex:1;">
+    <div class="senders-body">
+      <div id="provider-badge-wrap"></div>
       <div class="section-label">Senders in your inbox — select to delete</div>
       <div class="sender-grid" id="sender-grid"></div>
     </div>
-    <div style="padding:0 24px 24px;">
-      <div class="action-bar">
-        <div class="sel-count">Selected: <strong id="sel-count-num">0</strong> sender(s)</div>
-        <button class="delete-btn" id="delete-btn" disabled onclick="runDeletion()">
-          Delete from inbox
-        </button>
-      </div>
+    <div class="action-bar">
+      <div class="sel-count">Selected: <strong id="sel-count-num">0</strong> sender(s)</div>
+      <button class="delete-btn" id="delete-btn" disabled onclick="runDeletion()">Delete from inbox</button>
     </div>
   </div>
 
-  <!-- ═══ RESULT ═══ -->
+  <!-- RESULT -->
   <div class="screen" id="screen-result">
     <div class="topbar">
       <div class="logo"><div class="logo-dot"></div>Mail cleaner</div>
@@ -328,23 +187,16 @@
 </div>
 <script>
   /* ─── CONFIG ─── */
-  const CLIENT_ID      = 'f4e717be-2d6e-4fc1-97f6-ce25c3c399e4';
-  const LOGIC_APP_URL  = 'https://prod-20.germanywestcentral.logic.azure.com:443/workflows/b31e60ebbd124050a2fd58b1c32e3127/triggers/When_an_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_an_HTTP_request_is_received%2Frun&sv=1.0&sig=rVwypNcDmNXR3Y2ETkzlYxEyHOFXeATV_6rvNcBjn3c';
-  const SCOPES         = ['User.Read', 'Mail.Read', 'Mail.ReadWrite'];
+  const MS_CLIENT_ID    = 'f4e717be-2d6e-4fc1-97f6-ce25c3c399e4';
+  const GOOGLE_CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID_HERE';
+  const LOGIC_APP_URL   = 'https://prod-20.germanywestcentral.logic.azure.com:443/workflows/b31e60ebbd124050a2fd58b1c32e3127/triggers/When_an_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_an_HTTP_request_is_received%2Frun&sv=1.0&sig=rVwypNcDmNXR3Y2ETkzlYxEyHOFXeATV_6rvNcBjn3c';
+  const MS_SCOPES       = ['User.Read', 'Mail.Read', 'Mail.ReadWrite'];
 
-  /* ─── MSAL SETUP ─── */
-  const msalConfig = {
-    auth: {
-      clientId:    CLIENT_ID,
-      authority:   'https://login.microsoftonline.com/common',
-      redirectUri: window.location.origin + window.location.pathname
-    },
-    cache: { cacheLocation: 'sessionStorage', storeAuthStateInCookie: false }
-  };
-
-  let msalInstance = null;
-  let currentAccount = null;
-  let accessToken    = null;
+  /* ─── STATE ─── */
+  let msalInstance    = null;
+  let currentAccount  = null;
+  let accessToken     = null;
+  let currentProvider = null; // 'microsoft' or 'google'
   let selectedSenders = new Set();
 
   /* ─── SCREEN HELPERS ─── */
@@ -357,103 +209,195 @@
     document.getElementById('loading-msg').textContent = msg;
   }
 
-  /* ─── LOGIN ─── */
-  async function startLogin() {
+  /* ══════════════════════════════════════════
+     MICROSOFT LOGIN
+  ══════════════════════════════════════════ */
+  async function startMicrosoftLogin() {
     try {
-      msalInstance = new msal.PublicClientApplication(msalConfig);
+      const config = {
+        auth: {
+          clientId:    MS_CLIENT_ID,
+          authority:   'https://login.microsoftonline.com/common',
+          redirectUri: window.location.origin + window.location.pathname
+        },
+        cache: { cacheLocation: 'sessionStorage' }
+      };
+      msalInstance = new msal.PublicClientApplication(config);
       await msalInstance.initialize();
       setLoading('Opening Microsoft sign-in...');
-      const result = await msalInstance.loginPopup({ scopes: SCOPES });
-      currentAccount = result.account;
-      accessToken    = result.accessToken;
-      await loadSenders();
+      const result = await msalInstance.loginPopup({ scopes: MS_SCOPES });
+      currentAccount  = result.account;
+      accessToken     = result.accessToken;
+      currentProvider = 'microsoft';
+      await loadMicrosoftSenders();
     } catch (e) {
       show('login');
-      if (e.errorCode !== 'user_cancelled') {
-        alert('Sign-in failed: ' + (e.message || e));
-      }
+      if (e.errorCode !== 'user_cancelled') alert('Sign-in failed: ' + (e.message || e));
     }
   }
 
-  async function getToken() {
+  async function getMicrosoftToken() {
     try {
-      const r = await msalInstance.acquireTokenSilent({ scopes: SCOPES, account: currentAccount });
+      const r = await msalInstance.acquireTokenSilent({ scopes: MS_SCOPES, account: currentAccount });
       return r.accessToken;
     } catch {
-      const r = await msalInstance.acquireTokenPopup({ scopes: SCOPES });
+      const r = await msalInstance.acquireTokenPopup({ scopes: MS_SCOPES });
       return r.accessToken;
     }
   }
 
-  /* ─── LOAD SENDERS ─── */
-  async function loadSenders() {
+  async function loadMicrosoftSenders() {
     setLoading('Scanning your inbox...');
     try {
-      const token = await getToken();
+      const token = await getMicrosoftToken();
       accessToken = token;
-
-      let url = 'https://graph.microsoft.com/v1.0/me/messages?$select=from,subject,receivedDateTime&$top=250&$orderby=receivedDateTime desc';
-      let allMessages = [];
-
-      while (url && allMessages.length < 500) {
-        const res  = await fetch(url, { headers: { Authorization: 'Bearer ' + token } });
-        const data = await res.json();
-        if (!data.value) throw new Error(data.error?.message || 'Could not read inbox.');
-        allMessages = allMessages.concat(data.value);
-        url = data['@odata.nextLink'] || null;
-      }
-
-      const map = {};
-      for (const msg of allMessages) {
-        const addr = msg.from?.emailAddress?.address || '';
-        const name = msg.from?.emailAddress?.name    || addr;
-        if (!addr) continue;
-        const domain = addr.split('@')[1]?.toLowerCase();
-        if (!domain) continue;
-        if (!map[domain]) {
-          map[domain] = {
-            name:   cleanName(name),
-            domain: '@' + domain,
-            addr:   addr,
-            count:  0
-          };
-        }
-        map[domain].count++;
-      }
-
-      const senders = Object.values(map).sort((a, b) => b.count - a.count);
-      renderSenders(senders);
-
+      const res  = await fetch('https://graph.microsoft.com/v1.0/me/messages?$select=from&$top=250&$orderby=receivedDateTime desc', {
+        headers: { Authorization: 'Bearer ' + token }
+      });
+      const data = await res.json();
+      if (!data.value) throw new Error(data.error?.message || 'Could not read inbox.');
+      const senders = groupSenders(data.value.map(m => ({
+        address: m.from?.emailAddress?.address || '',
+        name:    m.from?.emailAddress?.name    || ''
+      })));
       const email    = currentAccount.username || '';
-      const initials = email.slice(0, 2).toUpperCase();
-      document.getElementById('user-avatar').textContent        = initials;
-      document.getElementById('user-email-display').textContent = email;
+      setUserUI(email, 'microsoft');
+      renderSenders(senders);
       show('senders');
-
     } catch (e) {
       show('login');
       alert('Could not load inbox: ' + (e.message || e));
     }
   }
 
-  function cleanName(name) {
-    return name
-      .replace(/\s*(newsletter|noreply|no-reply|notifications?|updates?|info|support|team|help)\b.*/gi, '')
-      .trim() || name;
+  /* ══════════════════════════════════════════
+     GOOGLE LOGIN
+  ══════════════════════════════════════════ */
+  function startGoogleLogin() {
+    setLoading('Opening Google sign-in...');
+    const client = google.accounts.oauth2.initTokenClient({
+      client_id: GOOGLE_CLIENT_ID,
+      scope: 'https://www.googleapis.com/auth/gmail.modify',
+      callback: async (response) => {
+        if (response.error) {
+          show('login');
+          alert('Google sign-in failed: ' + response.error);
+          return;
+        }
+        accessToken     = response.access_token;
+        currentProvider = 'google';
+        await loadGoogleSenders();
+      }
+    });
+    client.requestAccessToken();
   }
 
-  /* ─── RENDER SENDER CARDS ─── */
+  async function loadGoogleSenders() {
+    setLoading('Scanning your Gmail inbox...');
+    try {
+      // Get user profile for email display
+      const profileRes  = await fetch('https://www.googleapis.com/gmail/v1/users/me/profile', {
+        headers: { Authorization: 'Bearer ' + accessToken }
+      });
+      const profile = await profileRes.json();
+      const email   = profile.emailAddress || 'Gmail user';
+
+      // List messages (max 500 for a good sample)
+      const listRes  = await fetch('https://www.googleapis.com/gmail/v1/users/me/messages?maxResults=200&labelIds=INBOX', {
+        headers: { Authorization: 'Bearer ' + accessToken }
+      });
+      const listData = await listRes.json();
+      if (!listData.messages) throw new Error('Could not read Gmail inbox.');
+
+      setLoading('Reading senders (' + listData.messages.length + ' emails)...');
+
+      // Batch fetch sender headers only
+      const senderMap = {};
+      const batchSize = 20;
+      for (let i = 0; i < Math.min(listData.messages.length, 200); i += batchSize) {
+        const batch = listData.messages.slice(i, i + batchSize);
+        await Promise.all(batch.map(async (msg) => {
+          const r = await fetch(`https://www.googleapis.com/gmail/v1/users/me/messages/${msg.id}?format=metadata&metadataHeaders=From`, {
+            headers: { Authorization: 'Bearer ' + accessToken }
+          });
+          const d = await r.json();
+          const fromHeader = d.payload?.headers?.find(h => h.name === 'From')?.value || '';
+          const parsed     = parseFromHeader(fromHeader);
+          if (!parsed.address) return;
+          const domain = parsed.address.split('@')[1]?.toLowerCase();
+          if (!domain) return;
+          if (!senderMap[domain]) senderMap[domain] = { name: parsed.name || domain, domain: '@' + domain, count: 0 };
+          senderMap[domain].count++;
+        }));
+      }
+
+      const senders = Object.values(senderMap).sort((a, b) => b.count - a.count);
+      setUserUI(email, 'google');
+      renderSenders(senders);
+      show('senders');
+    } catch (e) {
+      show('login');
+      alert('Could not load Gmail: ' + (e.message || e));
+    }
+  }
+
+  function parseFromHeader(header) {
+    // Parses "Name <email@domain.com>" or "email@domain.com"
+    const match = header.match(/^(.*?)\s*<([^>]+)>$/);
+    if (match) return { name: match[1].replace(/"/g, '').trim(), address: match[2].trim() };
+    return { name: '', address: header.trim() };
+  }
+
+  /* ══════════════════════════════════════════
+     SHARED HELPERS
+  ══════════════════════════════════════════ */
+  function groupSenders(messages) {
+    const map = {};
+    for (const m of messages) {
+      if (!m.address) continue;
+      const domain = m.address.split('@')[1]?.toLowerCase();
+      if (!domain) continue;
+      if (!map[domain]) map[domain] = { name: cleanName(m.name || domain), domain: '@' + domain, count: 0 };
+      map[domain].count++;
+    }
+    return Object.values(map).sort((a, b) => b.count - a.count);
+  }
+
+  function cleanName(name) {
+    return name.replace(/\s*(newsletter|noreply|no-reply|notifications?|updates?|info|support|team|help)\b.*/gi, '').trim() || name;
+  }
+
+  function setUserUI(email, provider) {
+    const initials = email.slice(0, 2).toUpperCase();
+    const avatar   = document.getElementById('user-avatar');
+    avatar.textContent = initials;
+    avatar.className   = 'avatar ' + provider;
+    document.getElementById('user-email-display').textContent = email;
+
+    const badgeWrap = document.getElementById('provider-badge-wrap');
+    const label     = provider === 'google' ? 'Gmail' : 'Microsoft';
+    const cls       = provider === 'google' ? 'google' : 'microsoft';
+    badgeWrap.innerHTML = `<span class="provider-badge ${cls}">${label} account</span>`;
+
+    // Store email for userId
+    currentAccount = currentAccount || { username: email, localAccountId: btoa(email).replace(/=/g,'') };
+  }
+
   function renderSenders(senders) {
     const grid = document.getElementById('sender-grid');
     grid.innerHTML = '';
+    selectedSenders.clear();
+    document.getElementById('sel-count-num').textContent = '0';
+    document.getElementById('delete-btn').disabled = true;
+
     if (!senders.length) {
       grid.innerHTML = '<div class="empty-state">No senders found in your recent inbox.</div>';
       return;
     }
     for (const s of senders) {
       const card = document.createElement('div');
-      card.className    = 'sender-card';
-      card.dataset.domain = s.domain;
+      card.className       = 'sender-card';
+      card.dataset.domain  = s.domain;
       card.innerHTML = `
         <div class="sender-name">${esc(s.name)}</div>
         <div class="sender-domain">${esc(s.domain)}</div>
@@ -477,14 +421,16 @@
     document.getElementById('delete-btn').disabled       = n === 0;
   }
 
-  /* ─── RUN DELETION ─── */
+  /* ══════════════════════════════════════════
+     TRIGGER LOGIC APP
+  ══════════════════════════════════════════ */
   async function runDeletion() {
     if (!selectedSenders.size) return;
     const btn = document.getElementById('delete-btn');
     btn.disabled    = true;
     btn.textContent = 'Running...';
 
-    const userId  = currentAccount.localAccountId || currentAccount.homeAccountId || 'user';
+    const userId  = currentAccount?.localAccountId || currentAccount?.homeAccountId || btoa(currentAccount?.username || 'user').replace(/=/g,'');
     const domains = Array.from(selectedSenders);
     const results = [];
 
@@ -493,18 +439,22 @@
         const resp = await fetch(LOGIC_APP_URL, {
           method:  'POST',
           headers: { 'Content-Type': 'application/json' },
-          body:    JSON.stringify({ userId, senderDomain: domain, accessToken })
+          body:    JSON.stringify({
+            userId,
+            senderDomain: domain,
+            accessToken,
+            provider: currentProvider   // 'microsoft' or 'google'
+          })
         });
         results.push({ domain, ok: resp.ok || resp.status === 202 });
       } catch (e) {
-        results.push({ domain, ok: false, err: e.message });
+        results.push({ domain, ok: false });
       }
     }
 
     showResult(results);
   }
 
-  /* ─── RESULT SCREEN ─── */
   function showResult(results) {
     const allOk = results.every(r => r.ok);
     const listHtml = results.map(r => `
@@ -513,7 +463,6 @@
         <span class="${r.ok ? 'status-ok' : 'status-fail'}">${r.ok ? 'queued' : 'failed'}</span>
       </div>
     `).join('');
-
     document.getElementById('result-card').innerHTML = `
       <div class="result-icon ${allOk ? 'success' : 'error'}">
         ${allOk
@@ -523,8 +472,8 @@
       </div>
       <h2>${allOk ? 'Deletion queued' : 'Some deletions failed'}</h2>
       <p>${allOk
-        ? 'Your Logic App is now deleting emails from the selected senders. This may take a moment depending on your inbox size.'
-        : 'One or more senders could not be processed. Check your Logic App run history in Azure for details.'
+        ? 'Your Logic App is now deleting emails from the selected senders.'
+        : 'One or more senders could not be processed. Check your Logic App run history for details.'
       }</p>
       <div class="deleted-list">${listHtml}</div>
       <button class="back-btn" onclick="resetAndBack()">Back to inbox</button>
@@ -542,23 +491,18 @@
     show('senders');
   }
 
-  /* ─── SIGN OUT ─── */
   function signOut() {
     if (confirm('Sign out of Mail Cleaner?')) {
       currentAccount  = null;
       accessToken     = null;
+      currentProvider = null;
       selectedSenders.clear();
       show('login');
     }
   }
 
-  /* ─── UTILS ─── */
   function esc(s) {
-    return String(s)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 </script>
 </body>
