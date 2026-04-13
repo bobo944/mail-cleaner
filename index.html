@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mail Cleaner</title>
+  <script src="https://cdn.jsdelivr.net/npm/@azure/msal-browser@3.28.0/lib/msal-browser.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #f5f5f3;
+      --bg-card:   #ffffff;
+      --bg-sec:    #f1efe8;
+      --border:    rgba(0,0,0,0.12);
+      --border-md: rgba(0,0,0,0.22);
+      --text:      #1a1a18;
+      --text-sec:  #5f5e5a;
+      --text-hint: #888780;
+      --blue:      #185FA5;
+      --blue-light:#E6F1FB;
+      --blue-dark: #0C447C;
+      --red:       #A32D2D;
+      --red-light: #FCEBEB;
+      --green:     #3B6D11;
+      --green-light:#EAF3DE;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg:        #1c1c1a;
+        --bg-card:   #252523;
+        --bg-sec:    #2c2c2a;
+        --border:    rgba(255,255,255,0.10);
+        --border-md: rgba(255,255,255,0.20);
+        --text:      #e8e6df;
+        --text-sec:  #b4b2a9;
+        --text-hint: #888780;
+        --blue-light:#0C447C;
+        --blue-dark: #B5D4F4;
+        --red-light: #501313;
+        --green-light:#173404;
+      }
+    }
+
+    html, body {
+      height: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    .page { min-height: 100vh; display: flex; flex-direction: column; }
+
+    /* ── Top bar ── */
+    .topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 24px;
+      background: var(--bg-card);
+      border-bottom: 0.5px solid var(--border);
+    }
+    .logo { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 600; color: var(--text); text-decoration: none; }
+    .logo-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--blue); }
+
+    .user-pill {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--bg-sec); border: 0.5px solid var(--border);
+      border-radius: 20px; padding: 5px 14px 5px 6px;
+      font-size: 12px; color: var(--text-sec); cursor: pointer;
+      transition: background .15s;
+    }
+    .user-pill:hover { background: var(--border); }
+    .avatar {
+      width: 24px; height: 24px; border-radius: 50%;
+      background: var(--blue-light); color: var(--blue-dark);
+      font-size: 10px; font-weight: 600;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* ── Screens ── */
+    .screen { display: none; flex: 1; }
+    .screen.active { display: flex; flex-direction: column; }
+
+    /* ── Login screen ── */
+    #screen-login {
+      align-items: center; justify-content: center; padding: 40px 20px;
+    }
+    .login-card {
+      background: var(--bg-card);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 40px 36px;
+      width: 100%; max-width: 400px;
+      text-align: center;
+    }
+    .login-card h1 { font-size: 22px; font-weight: 600; margin-bottom: 8px; }
+    .login-card p { font-size: 14px; color: var(--text-sec); margin-bottom: 28px; line-height: 1.6; }
+
+    .ms-btn {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      width: 100%; padding: 11px 18px;
+      background: var(--blue); color: #E6F1FB;
+      border: none; border-radius: var(--radius-md);
+      font-size: 14px; font-weight: 600; cursor: pointer;
+      transition: opacity .15s;
+    }
+    .ms-btn:hover { opacity: .88; }
+    .ms-btn svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+    .consent-note {
+      font-size: 11px; color: var(--text-hint);
+      margin-top: 14px; line-height: 1.6;
+    }
+
+    /* ── Loading screen ── */
+    #screen-loading { align-items: center; justify-content: center; }
+    .loading-wrap { text-align: center; padding: 60px 20px; }
+    .spinner {
+      width: 30px; height: 30px;
+      border: 2.5px solid var(--border-md);
+      border-top-color: var(--blue);
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      margin: 0 auto 16px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-wrap p { font-size: 14px; color: var(--text-sec); }
+
+    /* ── Senders screen ── */
+    #screen-senders { padding: 28px 24px; }
+    .section-label {
+      font-size: 11px; font-weight: 600; color: var(--text-hint);
+      text-transform: uppercase; letter-spacing: .07em;
+      margin-bottom: 14px;
+    }
+
+    .sender-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .sender-card {
+      background: var(--bg-card);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      cursor: pointer;
+      transition: border-color .15s, background .15s;
+      user-select: none;
+    }
+    .sender-card:hover { border-color: var(--border-md); }
+    .sender-card.selected {
+      border: 1.5px solid var(--blue);
+      background: var(--blue-light);
+    }
+    .sender-card.selected .sender-name { color: var(--blue-dark); }
+    .sender-card.selected .sender-domain,
+    .sender-card.selected .sender-count { color: var(--blue); }
+
+    .sender-name {
+      font-size: 13px; font-weight: 600; color: var(--text);
+      margin-bottom: 3px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .sender-domain {
+      font-size: 11px; color: var(--text-hint); margin-bottom: 8px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .sender-count { font-size: 11px; color: var(--text-sec); }
+    .count-dot {
+      display: inline-block; width: 6px; height: 6px;
+      border-radius: 50%; background: var(--border-md);
+      margin-right: 5px; vertical-align: middle;
+    }
+    .sender-card.selected .count-dot { background: var(--blue); }
+
+    /* ── Action bar ── */
+    .action-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--bg-card);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 12px 18px;
+      position: sticky; bottom: 16px;
+    }
+    .sel-count { font-size: 13px; color: var(--text-sec); }
+    .sel-count strong { color: var(--text); }
+
+    .delete-btn {
+      padding: 9px 22px;
+      background: var(--red); color: var(--red-light);
+      border: none; border-radius: var(--radius-md);
+      font-size: 13px; font-weight: 600; cursor: pointer;
+      transition: opacity .15s;
+    }
+    .delete-btn:disabled { opacity: .35; cursor: not-allowed; }
+    .delete-btn:not(:disabled):hover { opacity: .88; }
+
+    /* ── Result screen ── */
+    #screen-result { align-items: center; justify-content: center; padding: 40px 20px; }
+    .result-card {
+      background: var(--bg-card);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 36px 32px;
+      width: 100%; max-width: 440px;
+      text-align: center;
+    }
+    .result-icon {
+      width: 48px; height: 48px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 18px;
+    }
+    .result-icon.success { background: var(--green-light); }
+    .result-icon.error   { background: var(--red-light); }
+    .result-card h2 { font-size: 18px; font-weight: 600; margin-bottom: 6px; }
+    .result-card p  { font-size: 13px; color: var(--text-sec); line-height: 1.6; margin-bottom: 20px; }
+
+    .deleted-list {
+      background: var(--bg-sec);
+      border-radius: var(--radius-md);
+      padding: 10px 14px; margin-bottom: 20px;
+      text-align: left;
+    }
+    .deleted-list div {
+      font-size: 12px; color: var(--text-sec);
+      padding: 4px 0;
+      border-bottom: 0.5px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .deleted-list div:last-child { border-bottom: none; }
+    .status-ok   { color: var(--green); font-weight: 600; font-size: 11px; }
+    .status-fail { color: var(--red);   font-weight: 600; font-size: 11px; }
+
+    .back-btn {
+      padding: 9px 22px; background: transparent;
+      border: 0.5px solid var(--border-md);
+      border-radius: var(--radius-md);
+      font-size: 13px; color: var(--text); cursor: pointer;
+      transition: background .15s;
+    }
+    .back-btn:hover { background: var(--bg-sec); }
+
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center; padding: 40px 20px;
+      font-size: 14px; color: var(--text-sec);
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ═══ LOGIN ═══ -->
+  <div class="screen active" id="screen-login">
+    <div class="topbar">
+      <div class="logo"><div class="logo-dot"></div>Mail cleaner</div>
+    </div>
+    <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:40px 20px;">
+      <div class="login-card">
+        <h1>Clean your inbox</h1>
+        <p>Sign in with your Microsoft account to see which companies are sending you emails — then remove them in one click.</p>
+        <button class="ms-btn" onclick="startLogin()">
+          <svg viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg">
+            <rect x="1"  y="1"  width="9" height="9" fill="#F25022"/>
+            <rect x="11" y="1"  width="9" height="9" fill="#7FBA00"/>
+            <rect x="1"  y="11" width="9" height="9" fill="#00A4EF"/>
+            <rect x="11" y="11" width="9" height="9" fill="#FFB900"/>
+          </svg>
+          Sign in with Microsoft
+        </button>
+        <p class="consent-note">You will be asked to allow this app to read and delete emails. No data leaves your session.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ LOADING ═══ -->
+  <div class="screen" id="screen-loading">
+    <div class="topbar">
+      <div class="logo"><div class="logo-dot"></div>Mail cleaner</div>
+    </div>
+    <div class="loading-wrap">
+      <div class="spinner"></div>
+      <p id="loading-msg">Signing you in...</p>
+    </div>
+  </div>
+
+  <!-- ═══ SENDERS ═══ -->
+  <div class="screen" id="screen-senders">
+    <div class="topbar">
+      <div class="logo"><div class="logo-dot"></div>Mail cleaner</div>
+      <div class="user-pill" onclick="signOut()" title="Sign out">
+        <div class="avatar" id="user-avatar">--</div>
+        <span id="user-email-display">user</span>
+        <span style="color:var(--text-hint);font-size:11px;margin-left:2px">· sign out</span>
+      </div>
+    </div>
+    <div style="padding:28px 24px 100px;flex:1;">
+      <div class="section-label">Senders in your inbox — select to delete</div>
+      <div class="sender-grid" id="sender-grid"></div>
+    </div>
+    <div style="padding:0 24px 24px;">
+      <div class="action-bar">
+        <div class="sel-count">Selected: <strong id="sel-count-num">0</strong> sender(s)</div>
+        <button class="delete-btn" id="delete-btn" disabled onclick="runDeletion()">
+          Delete from inbox
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ RESULT ═══ -->
+  <div class="screen" id="screen-result">
+    <div class="topbar">
+      <div class="logo"><div class="logo-dot"></div>Mail cleaner</div>
+    </div>
+    <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:40px 20px;">
+      <div class="result-card" id="result-card"></div>
+    </div>
+  </div>
+
+</div>
+<script>
+  /* ─── CONFIG ─── */
+  const CLIENT_ID      = 'f4e717be-2d6e-4fc1-97f6-ce25c3c399e4';
+  const LOGIC_APP_URL  = 'https://prod-20.germanywestcentral.logic.azure.com:443/workflows/b31e60ebbd124050a2fd58b1c32e3127/triggers/When_an_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_an_HTTP_request_is_received%2Frun&sv=1.0&sig=rVwypNcDmNXR3Y2ETkzlYxEyHOFXeATV_6rvNcBjn3c';
+  const SCOPES         = ['User.Read', 'Mail.Read', 'Mail.ReadWrite'];
+
+  /* ─── MSAL SETUP ─── */
+  const msalConfig = {
+    auth: {
+      clientId:    CLIENT_ID,
+      authority:   'https://login.microsoftonline.com/common',
+      redirectUri: window.location.origin + window.location.pathname
+    },
+    cache: { cacheLocation: 'sessionStorage', storeAuthStateInCookie: false }
+  };
+
+  let msalInstance = null;
+  let currentAccount = null;
+  let accessToken    = null;
+  let selectedSenders = new Set();
+
+  /* ─── SCREEN HELPERS ─── */
+  function show(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('screen-' + id).classList.add('active');
+  }
+  function setLoading(msg) {
+    show('loading');
+    document.getElementById('loading-msg').textContent = msg;
+  }
+
+  /* ─── LOGIN ─── */
+  async function startLogin() {
+    try {
+      msalInstance = new msal.PublicClientApplication(msalConfig);
+      await msalInstance.initialize();
+      setLoading('Opening Microsoft sign-in...');
+      const result = await msalInstance.loginPopup({ scopes: SCOPES });
+      currentAccount = result.account;
+      accessToken    = result.accessToken;
+      await loadSenders();
+    } catch (e) {
+      show('login');
+      if (e.errorCode !== 'user_cancelled') {
+        alert('Sign-in failed: ' + (e.message || e));
+      }
+    }
+  }
+
+  async function getToken() {
+    try {
+      const r = await msalInstance.acquireTokenSilent({ scopes: SCOPES, account: currentAccount });
+      return r.accessToken;
+    } catch {
+      const r = await msalInstance.acquireTokenPopup({ scopes: SCOPES });
+      return r.accessToken;
+    }
+  }
+
+  /* ─── LOAD SENDERS ─── */
+  async function loadSenders() {
+    setLoading('Scanning your inbox...');
+    try {
+      const token = await getToken();
+      accessToken = token;
+
+      let url = 'https://graph.microsoft.com/v1.0/me/messages?$select=from,subject,receivedDateTime&$top=250&$orderby=receivedDateTime desc';
+      let allMessages = [];
+
+      while (url && allMessages.length < 500) {
+        const res  = await fetch(url, { headers: { Authorization: 'Bearer ' + token } });
+        const data = await res.json();
+        if (!data.value) throw new Error(data.error?.message || 'Could not read inbox.');
+        allMessages = allMessages.concat(data.value);
+        url = data['@odata.nextLink'] || null;
+      }
+
+      const map = {};
+      for (const msg of allMessages) {
+        const addr = msg.from?.emailAddress?.address || '';
+        const name = msg.from?.emailAddress?.name    || addr;
+        if (!addr) continue;
+        const domain = addr.split('@')[1]?.toLowerCase();
+        if (!domain) continue;
+        if (!map[domain]) {
+          map[domain] = {
+            name:   cleanName(name),
+            domain: '@' + domain,
+            addr:   addr,
+            count:  0
+          };
+        }
+        map[domain].count++;
+      }
+
+      const senders = Object.values(map).sort((a, b) => b.count - a.count);
+      renderSenders(senders);
+
+      const email    = currentAccount.username || '';
+      const initials = email.slice(0, 2).toUpperCase();
+      document.getElementById('user-avatar').textContent        = initials;
+      document.getElementById('user-email-display').textContent = email;
+      show('senders');
+
+    } catch (e) {
+      show('login');
+      alert('Could not load inbox: ' + (e.message || e));
+    }
+  }
+
+  function cleanName(name) {
+    return name
+      .replace(/\s*(newsletter|noreply|no-reply|notifications?|updates?|info|support|team|help)\b.*/gi, '')
+      .trim() || name;
+  }
+
+  /* ─── RENDER SENDER CARDS ─── */
+  function renderSenders(senders) {
+    const grid = document.getElementById('sender-grid');
+    grid.innerHTML = '';
+    if (!senders.length) {
+      grid.innerHTML = '<div class="empty-state">No senders found in your recent inbox.</div>';
+      return;
+    }
+    for (const s of senders) {
+      const card = document.createElement('div');
+      card.className    = 'sender-card';
+      card.dataset.domain = s.domain;
+      card.innerHTML = `
+        <div class="sender-name">${esc(s.name)}</div>
+        <div class="sender-domain">${esc(s.domain)}</div>
+        <div class="sender-count"><span class="count-dot"></span>${s.count} email${s.count !== 1 ? 's' : ''}</div>
+      `;
+      card.addEventListener('click', () => toggleSender(card, s.domain));
+      grid.appendChild(card);
+    }
+  }
+
+  function toggleSender(card, domain) {
+    if (selectedSenders.has(domain)) {
+      selectedSenders.delete(domain);
+      card.classList.remove('selected');
+    } else {
+      selectedSenders.add(domain);
+      card.classList.add('selected');
+    }
+    const n = selectedSenders.size;
+    document.getElementById('sel-count-num').textContent = n;
+    document.getElementById('delete-btn').disabled       = n === 0;
+  }
+
+  /* ─── RUN DELETION ─── */
+  async function runDeletion() {
+    if (!selectedSenders.size) return;
+    const btn = document.getElementById('delete-btn');
+    btn.disabled    = true;
+    btn.textContent = 'Running...';
+
+    const userId  = currentAccount.localAccountId || currentAccount.homeAccountId || 'user';
+    const domains = Array.from(selectedSenders);
+    const results = [];
+
+    for (const domain of domains) {
+      try {
+        const resp = await fetch(LOGIC_APP_URL, {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({ userId, senderDomain: domain, accessToken })
+        });
+        results.push({ domain, ok: resp.ok || resp.status === 202 });
+      } catch (e) {
+        results.push({ domain, ok: false, err: e.message });
+      }
+    }
+
+    showResult(results);
+  }
+
+  /* ─── RESULT SCREEN ─── */
+  function showResult(results) {
+    const allOk = results.every(r => r.ok);
+    const listHtml = results.map(r => `
+      <div>
+        <span>${esc(r.domain)}</span>
+        <span class="${r.ok ? 'status-ok' : 'status-fail'}">${r.ok ? 'queued' : 'failed'}</span>
+      </div>
+    `).join('');
+
+    document.getElementById('result-card').innerHTML = `
+      <div class="result-icon ${allOk ? 'success' : 'error'}">
+        ${allOk
+          ? '<svg width="22" height="22" fill="none" viewBox="0 0 22 22"><path d="M4 11l5 5L18 7" stroke="#3B6D11" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+          : '<svg width="22" height="22" fill="none" viewBox="0 0 22 22"><path d="M11 7v5m0 4h.01" stroke="#A32D2D" stroke-width="2.2" stroke-linecap="round"/></svg>'
+        }
+      </div>
+      <h2>${allOk ? 'Deletion queued' : 'Some deletions failed'}</h2>
+      <p>${allOk
+        ? 'Your Logic App is now deleting emails from the selected senders. This may take a moment depending on your inbox size.'
+        : 'One or more senders could not be processed. Check your Logic App run history in Azure for details.'
+      }</p>
+      <div class="deleted-list">${listHtml}</div>
+      <button class="back-btn" onclick="resetAndBack()">Back to inbox</button>
+    `;
+    show('result');
+  }
+
+  function resetAndBack() {
+    selectedSenders.clear();
+    document.querySelectorAll('.sender-card').forEach(c => c.classList.remove('selected'));
+    document.getElementById('sel-count-num').textContent = '0';
+    const btn = document.getElementById('delete-btn');
+    btn.disabled    = true;
+    btn.textContent = 'Delete from inbox';
+    show('senders');
+  }
+
+  /* ─── SIGN OUT ─── */
+  function signOut() {
+    if (confirm('Sign out of Mail Cleaner?')) {
+      currentAccount  = null;
+      accessToken     = null;
+      selectedSenders.clear();
+      show('login');
+    }
+  }
+
+  /* ─── UTILS ─── */
+  function esc(s) {
+    return String(s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+</script>
+</body>
+</html>
