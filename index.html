@@ -277,7 +277,7 @@
     setLoading('Opening Google sign-in...');
     const client = google.accounts.oauth2.initTokenClient({
       client_id: GOOGLE_CLIENT_ID,
-      scope: 'https://www.googleapis.com/auth/gmail.modify',
+      scope: 'https://www.googleapis.com/auth/gmail.modify https://mail.google.com/',
       callback: async (response) => {
         if (response.error) {
           show('login');
