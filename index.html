@@ -15,6 +15,7 @@
       --blue: #185FA5; --blue-light: #E6F1FB; --blue-dark: #0C447C;
       --red: #A32D2D; --red-light: #FCEBEB;
       --green: #3B6D11; --green-light: #EAF3DE;
+      --amber: #854F0B; --amber-light: #FAEEDA;
       --radius-md: 8px; --radius-lg: 12px;
     }
     @media (prefers-color-scheme: dark) {
@@ -24,12 +25,15 @@
         --text: #e8e6df; --text-sec: #b4b2a9;
         --blue-light: #0C447C; --blue-dark: #B5D4F4;
         --red-light: #501313; --green-light: #173404;
+        --amber-light: #412402;
       }
     }
     html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.5; }
     .page { min-height: 100vh; display: flex; flex-direction: column; }
     .screen { display: none; flex: 1; }
     .screen.active { display: flex; flex-direction: column; }
+
+    /* Topbar */
     .topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; background: var(--bg-card); border-bottom: 0.5px solid var(--border); }
     .logo { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 600; color: var(--text); }
     .logo-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--blue); }
@@ -38,7 +42,15 @@
     .avatar { width: 24px; height: 24px; border-radius: 50%; background: var(--blue-light); color: var(--blue-dark); font-size: 10px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
     .avatar.google { background: #fce8e6; color: #c5221f; }
 
-    /* Login screen */
+    /* Tab nav */
+    .tab-nav { display: flex; gap: 0; background: var(--bg-card); border-bottom: 0.5px solid var(--border); padding: 0 24px; }
+    .tab-btn { padding: 12px 18px; font-size: 13px; font-weight: 500; color: var(--text-sec); background: transparent; border: none; border-bottom: 2px solid transparent; cursor: pointer; transition: color .15s, border-color .15s; margin-bottom: -0.5px; }
+    .tab-btn:hover { color: var(--text); }
+    .tab-btn.active { color: var(--blue); border-bottom-color: var(--blue); }
+    .tab-panel { display: none; flex: 1; flex-direction: column; }
+    .tab-panel.active { display: flex; flex-direction: column; }
+
+    /* Login */
     #screen-login { align-items: center; justify-content: center; padding: 40px 20px; }
     .login-card { background: var(--bg-card); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 40px 36px; width: 100%; max-width: 420px; text-align: center; }
     .login-card h1 { font-size: 22px; font-weight: 600; margin-bottom: 8px; }
@@ -61,30 +73,42 @@
     @keyframes spin { to { transform: rotate(360deg); } }
     .loading-wrap p { font-size: 14px; color: var(--text-sec); }
 
-    /* Senders */
-    #screen-senders { padding: 0; }
-    .senders-body { padding: 28px 24px 100px; flex: 1; }
+    /* Main content area */
+    #screen-main { padding: 0; }
+    .main-body { padding: 24px 24px 100px; flex: 1; }
     .section-label { font-size: 11px; font-weight: 600; color: var(--text-hint); text-transform: uppercase; letter-spacing: .07em; margin-bottom: 14px; }
     .provider-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; padding: 3px 10px; border-radius: 20px; margin-bottom: 16px; font-weight: 500; }
     .provider-badge.microsoft { background: var(--blue-light); color: var(--blue-dark); }
     .provider-badge.google { background: #fce8e6; color: #c5221f; }
-    .sender-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px; margin-bottom: 20px; }
-    .sender-card { background: var(--bg-card); border: 0.5px solid var(--border); border-radius: var(--radius-md); padding: 14px 16px; cursor: pointer; transition: border-color .15s, background .15s; user-select: none; }
-    .sender-card:hover { border-color: var(--border-md); }
-    .sender-card.selected { border: 1.5px solid var(--blue); background: var(--blue-light); }
-    .sender-card.selected .sender-name { color: var(--blue-dark); }
-    .sender-card.selected .sender-domain, .sender-card.selected .sender-count { color: var(--blue); }
-    .sender-name { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .sender-domain { font-size: 11px; color: var(--text-hint); margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .sender-count { font-size: 11px; color: var(--text-sec); }
-    .count-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--border-md); margin-right: 5px; vertical-align: middle; }
-    .sender-card.selected .count-dot { background: var(--blue); }
+
+    /* Cards grid */
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px; margin-bottom: 20px; }
+    .item-card { background: var(--bg-card); border: 0.5px solid var(--border); border-radius: var(--radius-md); padding: 14px 16px; cursor: pointer; transition: border-color .15s, background .15s; user-select: none; }
+    .item-card:hover { border-color: var(--border-md); }
+    .item-card.selected { border: 1.5px solid var(--blue); background: var(--blue-light); }
+    .item-card.selected .item-name { color: var(--blue-dark); }
+    .item-card.selected .item-sub, .item-card.selected .item-meta { color: var(--blue); }
+    .item-name { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .item-sub { font-size: 11px; color: var(--text-hint); margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .item-meta { font-size: 11px; color: var(--text-sec); }
+    .meta-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--border-md); margin-right: 5px; vertical-align: middle; }
+    .item-card.selected .meta-dot { background: var(--blue); }
+
+    /* Action bar */
     .action-bar { display: flex; align-items: center; justify-content: space-between; background: var(--bg-card); border: 0.5px solid var(--border); border-radius: var(--radius-md); padding: 12px 18px; position: sticky; bottom: 16px; margin: 0 24px 24px; }
     .sel-count { font-size: 13px; color: var(--text-sec); }
     .sel-count strong { color: var(--text); }
     .delete-btn { padding: 9px 22px; background: var(--red); color: var(--red-light); border: none; border-radius: var(--radius-md); font-size: 13px; font-weight: 600; cursor: pointer; transition: opacity .15s; }
     .delete-btn:disabled { opacity: .35; cursor: not-allowed; }
     .delete-btn:not(:disabled):hover { opacity: .88; }
+
+    /* OneDrive size bar */
+    .size-bar-wrap { margin-bottom: 20px; }
+    .size-bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+    .size-bar-label { font-size: 12px; color: var(--text-sec); width: 80px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .size-bar-track { flex: 1; height: 6px; background: var(--bg-sec); border-radius: 3px; overflow: hidden; }
+    .size-bar-fill { height: 100%; border-radius: 3px; background: var(--blue); }
+    .size-bar-val { font-size: 11px; color: var(--text-hint); width: 52px; text-align: right; flex-shrink: 0; }
 
     /* Result */
     #screen-result { align-items: center; justify-content: center; padding: 40px 20px; }
@@ -115,7 +139,7 @@
     <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:40px 20px;">
       <div class="login-card">
         <h1>Clean your inbox</h1>
-        <p>Sign in to see which companies are emailing you — then remove them in one click.</p>
+        <p>Sign in to see which companies are emailing you and what is filling your OneDrive — then remove them in one click.</p>
         <div class="provider-btns">
           <button class="ms-btn" onclick="startMicrosoftLogin()">
             <svg viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg">
@@ -137,7 +161,7 @@
             Sign in with Google
           </button>
         </div>
-        <p class="consent-note">You will be asked to allow this app to read and delete emails. No data leaves your session.</p>
+        <p class="consent-note">You will be asked to allow this app to read and delete emails and files. No data leaves your session.</p>
       </div>
     </div>
   </div>
@@ -153,8 +177,8 @@
     </div>
   </div>
 
-  <!-- SENDERS -->
-  <div class="screen" id="screen-senders">
+  <!-- MAIN (tabbed) -->
+  <div class="screen" id="screen-main">
     <div class="topbar">
       <div class="logo"><div class="logo-dot"></div>Mail cleaner</div>
       <div class="user-pill" onclick="signOut()" title="Sign out">
@@ -163,14 +187,39 @@
         <span style="color:var(--text-hint);font-size:11px;margin-left:2px">· sign out</span>
       </div>
     </div>
-    <div class="senders-body">
-      <div id="provider-badge-wrap"></div>
-      <div class="section-label">Senders in your inbox — select to delete</div>
-      <div class="sender-grid" id="sender-grid"></div>
+    <div class="tab-nav">
+      <button class="tab-btn active" onclick="switchTab('mail')">Inbox cleaner</button>
+      <button class="tab-btn" onclick="switchTab('onedrive')" id="onedrive-tab-btn">OneDrive</button>
     </div>
-    <div class="action-bar">
-      <div class="sel-count">Selected: <strong id="sel-count-num">0</strong> sender(s)</div>
-      <button class="delete-btn" id="delete-btn" disabled onclick="runDeletion()">Delete from inbox</button>
+
+    <!-- MAIL TAB -->
+    <div class="tab-panel active" id="tab-mail">
+      <div class="main-body">
+        <div id="provider-badge-wrap"></div>
+        <div class="section-label">Senders in your inbox — select to delete</div>
+        <div class="card-grid" id="sender-grid"></div>
+      </div>
+      <div class="action-bar">
+        <div class="sel-count">Selected: <strong id="sel-count-num">0</strong> sender(s)</div>
+        <button class="delete-btn" id="mail-delete-btn" disabled onclick="runMailDeletion()">Delete from inbox</button>
+      </div>
+    </div>
+
+    <!-- ONEDRIVE TAB -->
+    <div class="tab-panel" id="tab-onedrive">
+      <div class="main-body">
+        <div id="od-provider-note" style="margin-bottom:16px;font-size:13px;color:var(--text-sec);display:none;"></div>
+        <div id="od-size-section" style="display:none;">
+          <div class="section-label">Storage by file type</div>
+          <div class="size-bar-wrap" id="od-size-bars"></div>
+        </div>
+        <div class="section-label" id="od-files-label" style="display:none;">Files — select to delete</div>
+        <div class="card-grid" id="onedrive-grid"></div>
+      </div>
+      <div class="action-bar">
+        <div class="sel-count">Selected: <strong id="od-count-num">0</strong> file(s) — <strong id="od-size-num">0 MB</strong></div>
+        <button class="delete-btn" id="od-delete-btn" disabled onclick="runOneDriveDeletion()">Delete files</button>
+      </div>
     </div>
   </div>
 
@@ -187,19 +236,22 @@
 </div>
 <script>
   /* ─── CONFIG ─── */
-  const MS_CLIENT_ID    = 'f4e717be-2d6e-4fc1-97f6-ce25c3c399e4';
+  const MS_CLIENT_ID     = 'f4e717be-2d6e-4fc1-97f6-ce25c3c399e4';
   const GOOGLE_CLIENT_ID = '943640562909-qcsuqmgmkeckv4lh6ru1hcr6n2hso0us.apps.googleusercontent.com';
-  const LOGIC_APP_URL   = 'https://prod-20.germanywestcentral.logic.azure.com:443/workflows/b31e60ebbd124050a2fd58b1c32e3127/triggers/When_an_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_an_HTTP_request_is_received%2Frun&sv=1.0&sig=rVwypNcDmNXR3Y2ETkzlYxEyHOFXeATV_6rvNcBjn3c';
-  const MS_SCOPES       = ['User.Read', 'Mail.Read', 'Mail.ReadWrite'];
+  const MAIL_LOGIC_APP   = 'https://prod-20.germanywestcentral.logic.azure.com:443/workflows/b31e60ebbd124050a2fd58b1c32e3127/triggers/When_an_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_an_HTTP_request_is_received%2Frun&sv=1.0&sig=rVwypNcDmNXR3Y2ETkzlYxEyHOFXeATV_6rvNcBjn3c';
+  const ONEDRIVE_LOGIC_APP = 'https://prod-20.germanywestcentral.logic.azure.com:443/workflows/eb8954be5cc14a46944947d8e9a75ffe/triggers/When_an_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_an_HTTP_request_is_received%2Frun&sv=1.0&sig=7qw-NafSDOzKuobe_Pt0k5j1t7TVC963pePDuc0PESc';
+  const MS_SCOPES        = ['User.Read', 'Mail.Read', 'Mail.ReadWrite', 'Files.ReadWrite'];
 
   /* ─── STATE ─── */
   let msalInstance    = null;
   let currentAccount  = null;
   let accessToken     = null;
-  let currentProvider = null; // 'microsoft' or 'google'
+  let currentProvider = null;
   let selectedSenders = new Set();
+  let selectedFiles   = new Map(); // fileId → { name, size }
+  let activeTab       = 'mail';
 
-  /* ─── SCREEN HELPERS ─── */
+  /* ─── SCREEN + TAB HELPERS ─── */
   function show(id) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById('screen-' + id).classList.add('active');
@@ -207,6 +259,21 @@
   function setLoading(msg) {
     show('loading');
     document.getElementById('loading-msg').textContent = msg;
+  }
+  function switchTab(tab) {
+    activeTab = tab;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelector(`.tab-btn[onclick="switchTab('${tab}')"]`).classList.add('active');
+    document.getElementById('tab-' + tab).classList.add('active');
+    if (tab === 'onedrive' && currentProvider === 'microsoft' && document.getElementById('onedrive-grid').children.length === 0) {
+      loadOneDrive();
+    }
+    if (tab === 'onedrive' && currentProvider === 'google') {
+      const note = document.getElementById('od-provider-note');
+      note.style.display = 'block';
+      note.textContent = 'OneDrive is only available for Microsoft accounts. Sign in with Microsoft to use this feature.';
+    }
   }
 
   /* ══════════════════════════════════════════
@@ -260,10 +327,10 @@
         address: m.from?.emailAddress?.address || '',
         name:    m.from?.emailAddress?.name    || ''
       })));
-      const email    = currentAccount.username || '';
+      const email = currentAccount.username || '';
       setUserUI(email, 'microsoft');
       renderSenders(senders);
-      show('senders');
+      show('main');
     } catch (e) {
       show('login');
       alert('Could not load inbox: ' + (e.message || e));
@@ -278,6 +345,7 @@
     const client = google.accounts.oauth2.initTokenClient({
       client_id: GOOGLE_CLIENT_ID,
       scope: 'https://www.googleapis.com/auth/gmail.modify https://mail.google.com/',
+      prompt: 'consent',
       callback: async (response) => {
         if (response.error) {
           show('login');
@@ -295,14 +363,12 @@
   async function loadGoogleSenders() {
     setLoading('Scanning your Gmail inbox...');
     try {
-      // Get user profile for email display
-      const profileRes  = await fetch('https://www.googleapis.com/gmail/v1/users/me/profile', {
+      const profileRes = await fetch('https://www.googleapis.com/gmail/v1/users/me/profile', {
         headers: { Authorization: 'Bearer ' + accessToken }
       });
       const profile = await profileRes.json();
       const email   = profile.emailAddress || 'Gmail user';
 
-      // List messages (max 500 for a good sample)
       const listRes  = await fetch('https://www.googleapis.com/gmail/v1/users/me/messages?maxResults=200&labelIds=INBOX', {
         headers: { Authorization: 'Bearer ' + accessToken }
       });
@@ -311,7 +377,6 @@
 
       setLoading('Reading senders (' + listData.messages.length + ' emails)...');
 
-      // Batch fetch sender headers only
       const senderMap = {};
       const batchSize = 20;
       for (let i = 0; i < Math.min(listData.messages.length, 200); i += batchSize) {
@@ -334,7 +399,7 @@
       const senders = Object.values(senderMap).sort((a, b) => b.count - a.count);
       setUserUI(email, 'google');
       renderSenders(senders);
-      show('senders');
+      show('main');
     } catch (e) {
       show('login');
       alert('Could not load Gmail: ' + (e.message || e));
@@ -342,14 +407,149 @@
   }
 
   function parseFromHeader(header) {
-    // Parses "Name <email@domain.com>" or "email@domain.com"
     const match = header.match(/^(.*?)\s*<([^>]+)>$/);
     if (match) return { name: match[1].replace(/"/g, '').trim(), address: match[2].trim() };
     return { name: '', address: header.trim() };
   }
 
   /* ══════════════════════════════════════════
-     SHARED HELPERS
+     ONEDRIVE SCAN
+  ══════════════════════════════════════════ */
+  async function loadOneDrive() {
+    const grid = document.getElementById('onedrive-grid');
+    grid.innerHTML = '<div class="empty-state">Scanning OneDrive...</div>';
+    document.getElementById('od-files-label').style.display = 'none';
+    document.getElementById('od-size-section').style.display = 'none';
+
+    try {
+      const token = await getMicrosoftToken();
+      accessToken = token;
+
+      const files = [];
+      await scanFolder('root', '', token, files);
+
+      if (!files.length) {
+        grid.innerHTML = '<div class="empty-state">No files found in OneDrive.</div>';
+        return;
+      }
+
+      files.sort((a, b) => b.size - a.size);
+      renderSizeBars(files);
+      renderOneDriveFiles(files);
+      document.getElementById('od-files-label').style.display = 'block';
+      document.getElementById('od-size-section').style.display = 'block';
+    } catch (e) {
+      grid.innerHTML = `<div class="empty-state">Could not load OneDrive: ${esc(e.message)}</div>`;
+    }
+  }
+
+  async function scanFolder(folderId, path, token, files) {
+    const url = folderId === 'root'
+      ? 'https://graph.microsoft.com/v1.0/me/drive/root/children?$select=id,name,size,file,folder,lastModifiedDateTime&$top=100'
+      : `https://graph.microsoft.com/v1.0/me/drive/items/${folderId}/children?$select=id,name,size,file,folder,lastModifiedDateTime&$top=100`;
+
+    const res  = await fetch(url, { headers: { Authorization: 'Bearer ' + token } });
+    const data = await res.json();
+    if (!data.value) return;
+
+    for (const item of data.value) {
+      if (item.file) {
+        files.push({
+          id:       item.id,
+          name:     item.name,
+          size:     item.size || 0,
+          modified: item.lastModifiedDateTime,
+          ext:      item.name.includes('.') ? item.name.split('.').pop().toLowerCase() : 'other',
+          path:     path ? path + '/' + item.name : item.name
+        });
+      } else if (item.folder && files.length < 300) {
+        await scanFolder(item.id, path ? path + '/' + item.name : item.name, token, files);
+      }
+    }
+  }
+
+  function renderSizeBars(files) {
+    const typeMap = {};
+    for (const f of files) {
+      const ext = f.ext || 'other';
+      if (!typeMap[ext]) typeMap[ext] = 0;
+      typeMap[ext] += f.size;
+    }
+    const sorted = Object.entries(typeMap).sort((a, b) => b[1] - a[1]).slice(0, 6);
+    const max    = sorted[0]?.[1] || 1;
+    const wrap   = document.getElementById('od-size-bars');
+    wrap.innerHTML = sorted.map(([ext, size]) => `
+      <div class="size-bar-row">
+        <div class="size-bar-label">.${esc(ext)}</div>
+        <div class="size-bar-track"><div class="size-bar-fill" style="width:${Math.round(size/max*100)}%"></div></div>
+        <div class="size-bar-val">${formatSize(size)}</div>
+      </div>
+    `).join('');
+  }
+
+  function renderOneDriveFiles(files) {
+    const grid = document.getElementById('onedrive-grid');
+    grid.innerHTML = '';
+    selectedFiles.clear();
+    document.getElementById('od-count-num').textContent = '0';
+    document.getElementById('od-size-num').textContent  = '0 MB';
+    document.getElementById('od-delete-btn').disabled   = true;
+
+    for (const f of files) {
+      const card = document.createElement('div');
+      card.className = 'item-card';
+      card.dataset.id   = f.id;
+      card.dataset.size = f.size;
+      const modified = f.modified ? new Date(f.modified).toLocaleDateString() : '';
+      card.innerHTML = `
+        <div class="item-name">${esc(f.name)}</div>
+        <div class="item-sub">${esc(f.path.includes('/') ? f.path.substring(0, f.path.lastIndexOf('/')) : 'Root')}</div>
+        <div class="item-meta"><span class="meta-dot"></span>${formatSize(f.size)}${modified ? ' · ' + modified : ''}</div>
+      `;
+      card.addEventListener('click', () => toggleFile(card, f));
+      grid.appendChild(card);
+    }
+  }
+
+  function toggleFile(card, file) {
+    if (selectedFiles.has(file.id)) {
+      selectedFiles.delete(file.id);
+      card.classList.remove('selected');
+    } else {
+      selectedFiles.set(file.id, file);
+      card.classList.add('selected');
+    }
+    const n     = selectedFiles.size;
+    const bytes = Array.from(selectedFiles.values()).reduce((s, f) => s + f.size, 0);
+    document.getElementById('od-count-num').textContent = n;
+    document.getElementById('od-size-num').textContent  = formatSize(bytes);
+    document.getElementById('od-delete-btn').disabled   = n === 0;
+  }
+
+  async function runOneDriveDeletion() {
+    if (!selectedFiles.size) return;
+    const btn = document.getElementById('od-delete-btn');
+    btn.disabled    = true;
+    btn.textContent = 'Deleting...';
+
+    const results = [];
+    for (const [fileId, file] of selectedFiles) {
+      try {
+        const resp = await fetch(ONEDRIVE_LOGIC_APP, {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({ fileId, accessToken })
+        });
+        results.push({ name: file.name, ok: resp.ok || resp.status === 202 });
+      } catch (e) {
+        results.push({ name: file.name, ok: false });
+      }
+    }
+    showResult(results, 'Files deleted', 'Some files could not be deleted.');
+  }
+
+  /* ══════════════════════════════════════════
+     MAIL SHARED HELPERS
   ══════════════════════════════════════════ */
   function groupSenders(messages) {
     const map = {};
@@ -379,16 +579,19 @@
     const cls       = provider === 'google' ? 'google' : 'microsoft';
     badgeWrap.innerHTML = `<span class="provider-badge ${cls}">${label} account</span>`;
 
-    // Store email for userId
-    currentAccount = currentAccount || { username: email, localAccountId: btoa(email).replace(/=/g,'') };
+    if (provider === 'google') {
+      document.getElementById('onedrive-tab-btn').style.opacity = '0.4';
+    }
+
+    currentAccount = currentAccount || { username: email, localAccountId: btoa(email).replace(/=/g, '') };
   }
 
   function renderSenders(senders) {
     const grid = document.getElementById('sender-grid');
     grid.innerHTML = '';
     selectedSenders.clear();
-    document.getElementById('sel-count-num').textContent = '0';
-    document.getElementById('delete-btn').disabled = true;
+    document.getElementById('sel-count-num').textContent     = '0';
+    document.getElementById('mail-delete-btn').disabled      = true;
 
     if (!senders.length) {
       grid.innerHTML = '<div class="empty-state">No senders found in your recent inbox.</div>';
@@ -396,12 +599,12 @@
     }
     for (const s of senders) {
       const card = document.createElement('div');
-      card.className       = 'sender-card';
-      card.dataset.domain  = s.domain;
+      card.className      = 'item-card';
+      card.dataset.domain = s.domain;
       card.innerHTML = `
-        <div class="sender-name">${esc(s.name)}</div>
-        <div class="sender-domain">${esc(s.domain)}</div>
-        <div class="sender-count"><span class="count-dot"></span>${s.count} email${s.count !== 1 ? 's' : ''}</div>
+        <div class="item-name">${esc(s.name)}</div>
+        <div class="item-sub">${esc(s.domain)}</div>
+        <div class="item-meta"><span class="meta-dot"></span>${s.count} email${s.count !== 1 ? 's' : ''}</div>
       `;
       card.addEventListener('click', () => toggleSender(card, s.domain));
       grid.appendChild(card);
@@ -417,52 +620,47 @@
       card.classList.add('selected');
     }
     const n = selectedSenders.size;
-    document.getElementById('sel-count-num').textContent = n;
-    document.getElementById('delete-btn').disabled       = n === 0;
+    document.getElementById('sel-count-num').textContent     = n;
+    document.getElementById('mail-delete-btn').disabled      = n === 0;
   }
 
-  /* ══════════════════════════════════════════
-     TRIGGER LOGIC APP
-  ══════════════════════════════════════════ */
-  async function runDeletion() {
+  async function runMailDeletion() {
     if (!selectedSenders.size) return;
-    const btn = document.getElementById('delete-btn');
+    const btn = document.getElementById('mail-delete-btn');
     btn.disabled    = true;
     btn.textContent = 'Running...';
 
-    const userId  = currentAccount?.localAccountId || currentAccount?.homeAccountId || btoa(currentAccount?.username || 'user').replace(/=/g,'');
+    const userId  = currentAccount?.localAccountId || currentAccount?.homeAccountId || btoa(currentAccount?.username || 'user').replace(/=/g, '');
     const domains = Array.from(selectedSenders);
     const results = [];
 
     for (const domain of domains) {
       try {
-        const resp = await fetch(LOGIC_APP_URL, {
+        const resp = await fetch(MAIL_LOGIC_APP, {
           method:  'POST',
           headers: { 'Content-Type': 'application/json' },
-          body:    JSON.stringify({
-            userId,
-            senderDomain: domain,
-            accessToken,
-            provider: currentProvider   // 'microsoft' or 'google'
-          })
+          body:    JSON.stringify({ userId, senderDomain: domain, accessToken, provider: currentProvider })
         });
-        results.push({ domain, ok: resp.ok || resp.status === 202 });
+        results.push({ name: domain, ok: resp.ok || resp.status === 202 });
       } catch (e) {
-        results.push({ domain, ok: false });
+        results.push({ name: domain, ok: false });
       }
     }
-
-    showResult(results);
+    showResult(results, 'Deletion queued', 'Some deletions failed.');
   }
 
-  function showResult(results) {
-    const allOk = results.every(r => r.ok);
+  /* ══════════════════════════════════════════
+     RESULT SCREEN
+  ══════════════════════════════════════════ */
+  function showResult(results, successTitle, failTitle) {
+    const allOk    = results.every(r => r.ok);
     const listHtml = results.map(r => `
       <div>
-        <span>${esc(r.domain)}</span>
-        <span class="${r.ok ? 'status-ok' : 'status-fail'}">${r.ok ? 'queued' : 'failed'}</span>
+        <span>${esc(r.name)}</span>
+        <span class="${r.ok ? 'status-ok' : 'status-fail'}">${r.ok ? 'done' : 'failed'}</span>
       </div>
     `).join('');
+
     document.getElementById('result-card').innerHTML = `
       <div class="result-icon ${allOk ? 'success' : 'error'}">
         ${allOk
@@ -470,25 +668,29 @@
           : '<svg width="22" height="22" fill="none" viewBox="0 0 22 22"><path d="M11 7v5m0 4h.01" stroke="#A32D2D" stroke-width="2.2" stroke-linecap="round"/></svg>'
         }
       </div>
-      <h2>${allOk ? 'Deletion queued' : 'Some deletions failed'}</h2>
+      <h2>${allOk ? successTitle : failTitle}</h2>
       <p>${allOk
-        ? 'Your Logic App is now deleting emails from the selected senders.'
-        : 'One or more senders could not be processed. Check your Logic App run history for details.'
+        ? 'The operation completed successfully.'
+        : 'One or more items could not be processed. Check your Logic App run history for details.'
       }</p>
       <div class="deleted-list">${listHtml}</div>
-      <button class="back-btn" onclick="resetAndBack()">Back to inbox</button>
+      <button class="back-btn" onclick="resetAndBack()">Back</button>
     `;
     show('result');
   }
 
   function resetAndBack() {
     selectedSenders.clear();
-    document.querySelectorAll('.sender-card').forEach(c => c.classList.remove('selected'));
-    document.getElementById('sel-count-num').textContent = '0';
-    const btn = document.getElementById('delete-btn');
-    btn.disabled    = true;
-    btn.textContent = 'Delete from inbox';
-    show('senders');
+    selectedFiles.clear();
+    document.querySelectorAll('.item-card').forEach(c => c.classList.remove('selected'));
+    document.getElementById('sel-count-num').textContent     = '0';
+    document.getElementById('mail-delete-btn').disabled      = true;
+    document.getElementById('mail-delete-btn').textContent   = 'Delete from inbox';
+    document.getElementById('od-count-num').textContent      = '0';
+    document.getElementById('od-size-num').textContent       = '0 MB';
+    document.getElementById('od-delete-btn').disabled        = true;
+    document.getElementById('od-delete-btn').textContent     = 'Delete files';
+    show('main');
   }
 
   function signOut() {
@@ -497,8 +699,20 @@
       accessToken     = null;
       currentProvider = null;
       selectedSenders.clear();
+      selectedFiles.clear();
+      document.getElementById('onedrive-grid').innerHTML = '';
       show('login');
     }
+  }
+
+  /* ══════════════════════════════════════════
+     UTILS
+  ══════════════════════════════════════════ */
+  function formatSize(bytes) {
+    if (bytes >= 1073741824) return (bytes / 1073741824).toFixed(1) + ' GB';
+    if (bytes >= 1048576)    return Math.round(bytes / 1048576) + ' MB';
+    if (bytes >= 1024)       return Math.round(bytes / 1024) + ' KB';
+    return bytes + ' B';
   }
 
   function esc(s) {
