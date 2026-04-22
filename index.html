@@ -15,6 +15,7 @@
       --blue: #185FA5; --blue-light: #E6F1FB; --blue-dark: #0C447C;
       --red: #A32D2D; --red-light: #FCEBEB;
       --green: #3B6D11; --green-light: #EAF3DE;
+      --teal: #0F6E56; --teal-light: #E1F5EE;
       --radius-md: 8px; --radius-lg: 12px;
     }
     @media (prefers-color-scheme: dark) {
@@ -24,6 +25,7 @@
         --text: #e8e6df; --text-sec: #b4b2a9;
         --blue-light: #0C447C; --blue-dark: #B5D4F4;
         --red-light: #501313; --green-light: #173404;
+        --teal-light: #04342C;
       }
     }
     html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.5; }
@@ -37,10 +39,11 @@
     .user-pill:hover { background: var(--border); }
     .avatar { width: 24px; height: 24px; border-radius: 50%; background: var(--blue-light); color: var(--blue-dark); font-size: 10px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
     .avatar.google { background: #fce8e6; color: #c5221f; }
-    .tab-nav { display: flex; background: var(--bg-card); border-bottom: 0.5px solid var(--border); padding: 0 24px; }
-    .tab-btn { padding: 12px 18px; font-size: 13px; font-weight: 500; color: var(--text-sec); background: transparent; border: none; border-bottom: 2px solid transparent; cursor: pointer; transition: color .15s, border-color .15s; margin-bottom: -0.5px; }
+    .tab-nav { display: flex; background: var(--bg-card); border-bottom: 0.5px solid var(--border); padding: 0 24px; overflow-x: auto; }
+    .tab-btn { padding: 12px 16px; font-size: 13px; font-weight: 500; color: var(--text-sec); background: transparent; border: none; border-bottom: 2px solid transparent; cursor: pointer; transition: color .15s, border-color .15s; margin-bottom: -0.5px; white-space: nowrap; flex-shrink: 0; }
     .tab-btn:hover { color: var(--text); }
     .tab-btn.active { color: var(--blue); border-bottom-color: var(--blue); }
+    .tab-btn.ms-only { opacity: 1; }
     .tab-panel { display: none; flex: 1; flex-direction: column; }
     .tab-panel.active { display: flex; flex-direction: column; }
     #screen-login { align-items: center; justify-content: center; padding: 40px 20px; }
@@ -71,6 +74,7 @@
     .storage-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 500; padding: 5px 12px; border-radius: 20px; margin-bottom: 16px; }
     .storage-badge.onedrive { background: var(--blue-light); color: var(--blue-dark); }
     .storage-badge.gdrive { background: #fce8e6; color: #c5221f; }
+    .storage-badge.sharepoint { background: var(--teal-light); color: var(--teal); }
     .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px; margin-bottom: 20px; }
     .item-card { background: var(--bg-card); border: 0.5px solid var(--border); border-radius: var(--radius-md); padding: 14px 16px; cursor: pointer; transition: border-color .15s, background .15s; user-select: none; }
     .item-card:hover { border-color: var(--border-md); }
@@ -82,6 +86,9 @@
     .item-sub { font-size: 11px; color: var(--text-hint); margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .item-meta { font-size: 11px; color: var(--text-sec); }
     .meta-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--border-md); margin-right: 5px; vertical-align: middle; }
+    .site-selector { margin-bottom: 20px; }
+    .site-selector label { font-size: 12px; color: var(--text-sec); display: block; margin-bottom: 6px; }
+    .site-selector select { width: 100%; padding: 8px 12px; background: var(--bg-card); border: 0.5px solid var(--border-md); border-radius: var(--radius-md); font-size: 13px; color: var(--text); cursor: pointer; }
     .action-bar { display: flex; align-items: center; justify-content: space-between; background: var(--bg-card); border: 0.5px solid var(--border); border-radius: var(--radius-md); padding: 12px 18px; position: sticky; bottom: 16px; margin: 0 24px 24px; }
     .sel-count { font-size: 13px; color: var(--text-sec); }
     .sel-count strong { color: var(--text); }
@@ -95,7 +102,16 @@
     .size-bar-fill { height: 100%; border-radius: 3px; }
     .size-bar-fill.ms { background: var(--blue); }
     .size-bar-fill.gd { background: #EA4335; }
-    .size-bar-val { font-size: 11px; color: var(--text-hint); width: 52px; text-align: right; flex-shrink: 0; }
+    .size-bar-fill.sp { background: var(--teal); }
+    .quota-row { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding: 12px 16px; background: var(--bg-card); border: 0.5px solid var(--border); border-radius: var(--radius-md); font-size: 13px; }
+    .quota-label { color: var(--text-sec); flex-shrink: 0; }
+    .quota-track { flex: 1; height: 8px; background: var(--bg-sec); border-radius: 4px; overflow: hidden; }
+    .quota-fill { height: 100%; border-radius: 4px; }
+    .quota-fill.ms { background: var(--blue); }
+    .quota-fill.gd { background: #EA4335; }
+    .quota-fill.sp { background: var(--teal); }
+    .quota-val { color: var(--text); font-weight: 500; flex-shrink: 0; }
+    .info-note { font-size: 13px; color: var(--text-sec); padding: 20px 0; line-height: 1.6; }
     #screen-result { align-items: center; justify-content: center; padding: 40px 20px; }
     .result-card { background: var(--bg-card); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 36px 32px; width: 100%; max-width: 440px; text-align: center; }
     .result-icon { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; }
@@ -111,13 +127,6 @@
     .back-btn { padding: 9px 22px; background: transparent; border: 0.5px solid var(--border-md); border-radius: var(--radius-md); font-size: 13px; color: var(--text); cursor: pointer; transition: background .15s; }
     .back-btn:hover { background: var(--bg-sec); }
     .empty-state { grid-column: 1 / -1; text-align: center; padding: 40px 20px; font-size: 14px; color: var(--text-sec); }
-    .quota-row { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding: 12px 16px; background: var(--bg-card); border: 0.5px solid var(--border); border-radius: var(--radius-md); font-size: 13px; }
-    .quota-label { color: var(--text-sec); flex-shrink: 0; }
-    .quota-track { flex: 1; height: 8px; background: var(--bg-sec); border-radius: 4px; overflow: hidden; }
-    .quota-fill { height: 100%; border-radius: 4px; }
-    .quota-fill.ms { background: var(--blue); }
-    .quota-fill.gd { background: #EA4335; }
-    .quota-val { color: var(--text); font-weight: 500; flex-shrink: 0; }
   </style>
 </head>
 <body>
@@ -182,6 +191,7 @@
     <div class="tab-nav">
       <button class="tab-btn active" onclick="switchTab('mail')">Inbox cleaner</button>
       <button class="tab-btn" onclick="switchTab('storage')">Storage</button>
+      <button class="tab-btn ms-only" onclick="switchTab('sharepoint')" id="sp-tab-btn">SharePoint</button>
     </div>
 
     <!-- MAIL TAB -->
@@ -214,6 +224,42 @@
         <button class="delete-btn" id="storage-delete-btn" disabled onclick="runStorageDeletion()">Delete files</button>
       </div>
     </div>
+
+    <!-- SHAREPOINT TAB -->
+    <div class="tab-panel" id="tab-sharepoint">
+      <div class="main-body">
+        <div id="sp-content">
+          <div id="sp-note" class="info-note" style="display:none;"></div>
+          <div id="sp-site-wrap" style="display:none;">
+            <div class="storage-badge sharepoint">SharePoint</div>
+            <div class="site-selector">
+              <label>Select a SharePoint site</label>
+              <select id="sp-site-select" onchange="loadSharePointLibraries()">
+                <option value="">Loading sites...</option>
+              </select>
+            </div>
+            <div id="sp-lib-wrap" style="display:none;">
+              <div class="site-selector">
+                <label>Select a document library</label>
+                <select id="sp-lib-select" onchange="loadSharePointFiles()">
+                  <option value="">Select a library...</option>
+                </select>
+              </div>
+            </div>
+            <div id="sp-size-section" style="display:none;">
+              <div class="section-label">Files by type</div>
+              <div class="size-bar-wrap" id="sp-size-bars"></div>
+            </div>
+            <div class="section-label" id="sp-files-label" style="display:none;">Files — select to delete</div>
+            <div class="card-grid" id="sp-grid"></div>
+          </div>
+        </div>
+      </div>
+      <div class="action-bar">
+        <div class="sel-count">Selected: <strong id="sp-count-num">0</strong> file(s) — <strong id="sp-size-num">0 MB</strong></div>
+        <button class="delete-btn" id="sp-delete-btn" disabled onclick="runSharePointDeletion()">Delete files</button>
+      </div>
+    </div>
   </div>
 
   <!-- RESULT -->
@@ -234,7 +280,8 @@
   const MAIL_LOGIC_APP     = 'https://prod-20.germanywestcentral.logic.azure.com:443/workflows/b31e60ebbd124050a2fd58b1c32e3127/triggers/When_an_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_an_HTTP_request_is_received%2Frun&sv=1.0&sig=rVwypNcDmNXR3Y2ETkzlYxEyHOFXeATV_6rvNcBjn3c';
   const ONEDRIVE_LOGIC_APP = 'https://prod-20.germanywestcentral.logic.azure.com:443/workflows/eb8954be5cc14a46944947d8e9a75ffe/triggers/When_an_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_an_HTTP_request_is_received%2Frun&sv=1.0&sig=7qw-NafSDOzKuobe_Pt0k5j1t7TVC963pePDuc0PESc';
   const GDRIVE_LOGIC_APP   = 'https://prod-07.germanywestcentral.logic.azure.com:443/workflows/3861886e77384a1c98d8da182c33a4b9/triggers/When_an_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_an_HTTP_request_is_received%2Frun&sv=1.0&sig=IkFwViw13TyOSGiWgoF78CT78VqntPigV12mV10w8Qo';
-  const MS_SCOPES          = ['User.Read', 'Mail.Read', 'Mail.ReadWrite', 'Files.ReadWrite'];
+  const SP_LOGIC_APP       = 'https://prod-05.germanywestcentral.logic.azure.com:443/workflows/0467fff8b2a5438b9dfca63995e744b7/triggers/When_an_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_an_HTTP_request_is_received%2Frun&sv=1.0&sig=s3kGbIk49ATrpbl9rIn05-pqqeCJ5LMnBu_3ZNVhhE4';
+  const MS_SCOPES          = ['User.Read', 'Mail.Read', 'Mail.ReadWrite', 'Files.ReadWrite', 'Sites.ReadWrite.All'];
 
   /* ─── STATE ─── */
   let msalInstance    = null;
@@ -243,6 +290,9 @@
   let currentProvider = null;
   let selectedSenders = new Set();
   let selectedFiles   = new Map();
+  let selectedSPFiles = new Map();
+  let currentSiteId   = null;
+  let currentDriveId  = null;
 
   /* ─── HELPERS ─── */
   function show(id) {
@@ -258,9 +308,8 @@
     document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
     document.querySelector(`.tab-btn[onclick="switchTab('${tab}')"]`).classList.add('active');
     document.getElementById('tab-' + tab).classList.add('active');
-    if (tab === 'storage' && document.getElementById('storage-grid').children.length === 0) {
-      loadStorage();
-    }
+    if (tab === 'storage' && document.getElementById('storage-grid').children.length === 0) loadStorage();
+    if (tab === 'sharepoint' && document.getElementById('sp-grid').children.length === 0) loadSharePointSites();
   }
 
   /* ══════════════════════════════════════════
@@ -359,6 +408,8 @@
       const senders = Object.values(senderMap).sort((a, b) => b.count - a.count);
       setUserUI(email, 'google');
       renderSenders(senders);
+      // Dim SharePoint tab for Google users
+      document.getElementById('sp-tab-btn').style.opacity = '0.4';
       show('main');
     } catch (e) { show('login'); alert('Could not load Gmail: ' + (e.message || e)); }
   }
@@ -370,38 +421,231 @@
   }
 
   /* ══════════════════════════════════════════
-     STORAGE TAB — smart routing
+     SHAREPOINT TAB
   ══════════════════════════════════════════ */
-  async function loadStorage() {
-    if (currentProvider === 'microsoft') {
-      await loadOneDrive();
-    } else {
-      await loadGoogleDrive();
+  async function loadSharePointSites() {
+    const note    = document.getElementById('sp-note');
+    const siteWrap = document.getElementById('sp-site-wrap');
+
+    if (currentProvider !== 'microsoft') {
+      note.style.display = 'block';
+      note.textContent   = 'SharePoint is only available for Microsoft accounts. Sign in with Microsoft to use this feature.';
+      return;
+    }
+
+    siteWrap.style.display = 'block';
+    const select = document.getElementById('sp-site-select');
+    select.innerHTML = '<option value="">Loading sites...</option>';
+
+    try {
+      const token = await getMicrosoftToken();
+      accessToken  = token;
+
+      const res  = await fetch('https://graph.microsoft.com/v1.0/sites?search=*&$select=id,displayName,webUrl&$top=50', {
+        headers: { Authorization: 'Bearer ' + token }
+      });
+      const data = await res.json();
+
+      if (!data.value || data.value.length === 0) {
+        select.innerHTML = '<option value="">No SharePoint sites found</option>';
+        note.style.display = 'block';
+        note.textContent   = 'No SharePoint sites were found. SharePoint requires a Microsoft 365 work or school account.';
+        return;
+      }
+
+      select.innerHTML = '<option value="">Select a site...</option>';
+      for (const site of data.value) {
+        const opt   = document.createElement('option');
+        opt.value   = site.id;
+        opt.textContent = site.displayName || site.webUrl;
+        select.appendChild(opt);
+      }
+    } catch (e) {
+      select.innerHTML = '<option value="">Could not load sites</option>';
+      note.style.display = 'block';
+      note.textContent   = 'Could not load SharePoint sites. This feature requires a Microsoft 365 work or school account — personal Outlook/Hotmail accounts do not have SharePoint.';
     }
   }
 
-  /* ── OneDrive ── */
+  async function loadSharePointLibraries() {
+    const siteId = document.getElementById('sp-site-select').value;
+    if (!siteId) return;
+    currentSiteId = siteId;
+
+    const libWrap = document.getElementById('sp-lib-wrap');
+    const libSel  = document.getElementById('sp-lib-select');
+    libWrap.style.display = 'block';
+    libSel.innerHTML = '<option value="">Loading libraries...</option>';
+
+    // Reset file area
+    document.getElementById('sp-grid').innerHTML = '';
+    document.getElementById('sp-files-label').style.display  = 'none';
+    document.getElementById('sp-size-section').style.display = 'none';
+    selectedSPFiles.clear();
+    updateSPActionBar();
+
+    try {
+      const token = await getMicrosoftToken();
+      const res   = await fetch(`https://graph.microsoft.com/v1.0/sites/${siteId}/drives?$select=id,name`, {
+        headers: { Authorization: 'Bearer ' + token }
+      });
+      const data = await res.json();
+
+      libSel.innerHTML = '<option value="">Select a library...</option>';
+      for (const drive of (data.value || [])) {
+        const opt   = document.createElement('option');
+        opt.value   = drive.id;
+        opt.textContent = drive.name;
+        libSel.appendChild(opt);
+      }
+    } catch (e) {
+      libSel.innerHTML = '<option value="">Could not load libraries</option>';
+    }
+  }
+
+  async function loadSharePointFiles() {
+    const driveId = document.getElementById('sp-lib-select').value;
+    if (!driveId) return;
+    currentDriveId = driveId;
+
+    const grid = document.getElementById('sp-grid');
+    grid.innerHTML = '<div class="empty-state">Loading files...</div>';
+    document.getElementById('sp-files-label').style.display  = 'none';
+    document.getElementById('sp-size-section').style.display = 'none';
+    selectedSPFiles.clear();
+    updateSPActionBar();
+
+    try {
+      const token = await getMicrosoftToken();
+      const files = [];
+      await scanSPFolder(currentSiteId, driveId, 'root', '', token, files);
+
+      if (!files.length) {
+        grid.innerHTML = '<div class="empty-state">No files found in this library.</div>';
+        return;
+      }
+
+      files.sort((a, b) => b.size - a.size);
+      renderSPSizeBars(files);
+      renderSPFiles(files);
+      document.getElementById('sp-files-label').style.display  = 'block';
+      document.getElementById('sp-size-section').style.display = 'block';
+    } catch (e) {
+      grid.innerHTML = `<div class="empty-state">Could not load files: ${esc(e.message)}</div>`;
+    }
+  }
+
+  async function scanSPFolder(siteId, driveId, folderId, path, token, files) {
+    const url = folderId === 'root'
+      ? `https://graph.microsoft.com/v1.0/sites/${siteId}/drives/${driveId}/root/children?$select=id,name,size,file,folder,lastModifiedDateTime&$top=100`
+      : `https://graph.microsoft.com/v1.0/sites/${siteId}/drives/${driveId}/items/${folderId}/children?$select=id,name,size,file,folder,lastModifiedDateTime&$top=100`;
+
+    const res  = await fetch(url, { headers: { Authorization: 'Bearer ' + token } });
+    const data = await res.json();
+    if (!data.value) return;
+
+    for (const item of data.value) {
+      if (item.file) {
+        files.push({
+          id:       item.id,
+          name:     item.name,
+          size:     item.size || 0,
+          modified: item.lastModifiedDateTime,
+          ext:      item.name.includes('.') ? item.name.split('.').pop().toLowerCase() : 'other',
+          path:     path ? path + '/' + item.name : item.name,
+          siteId,
+          driveId
+        });
+      } else if (item.folder && files.length < 300) {
+        await scanSPFolder(siteId, driveId, item.id, path ? path + '/' + item.name : item.name, token, files);
+      }
+    }
+  }
+
+  function renderSPSizeBars(files) {
+    const typeMap = {};
+    for (const f of files) { if (!typeMap[f.ext]) typeMap[f.ext] = 0; typeMap[f.ext] += f.size; }
+    const sorted = Object.entries(typeMap).sort((a, b) => b[1] - a[1]).slice(0, 6);
+    const max    = sorted[0]?.[1] || 1;
+    document.getElementById('sp-size-bars').innerHTML = sorted.map(([ext, size]) => `
+      <div class="size-bar-row">
+        <div class="size-bar-label">.${esc(ext)}</div>
+        <div class="size-bar-track"><div class="size-bar-fill sp" style="width:${Math.round(size/max*100)}%"></div></div>
+        <div class="size-bar-val">${formatSize(size)}</div>
+      </div>
+    `).join('');
+  }
+
+  function renderSPFiles(files) {
+    const grid = document.getElementById('sp-grid');
+    grid.innerHTML = '';
+    for (const f of files) {
+      const card     = document.createElement('div');
+      card.className = 'item-card';
+      const modified = f.modified ? new Date(f.modified).toLocaleDateString() : '';
+      card.innerHTML = `
+        <div class="item-name">${esc(f.name)}</div>
+        <div class="item-sub">${esc(f.path.includes('/') ? f.path.substring(0, f.path.lastIndexOf('/')) : 'Root')}</div>
+        <div class="item-meta"><span class="meta-dot"></span>${formatSize(f.size)}${modified ? ' · ' + modified : ''}</div>
+      `;
+      card.addEventListener('click', () => toggleSPFile(card, f));
+      grid.appendChild(card);
+    }
+  }
+
+  function toggleSPFile(card, file) {
+    if (selectedSPFiles.has(file.id)) { selectedSPFiles.delete(file.id); card.classList.remove('selected'); }
+    else { selectedSPFiles.set(file.id, file); card.classList.add('selected'); }
+    updateSPActionBar();
+  }
+
+  function updateSPActionBar() {
+    const n     = selectedSPFiles.size;
+    const bytes = Array.from(selectedSPFiles.values()).reduce((s, f) => s + f.size, 0);
+    document.getElementById('sp-count-num').textContent = n;
+    document.getElementById('sp-size-num').textContent  = formatSize(bytes);
+    document.getElementById('sp-delete-btn').disabled   = n === 0;
+  }
+
+  async function runSharePointDeletion() {
+    if (!selectedSPFiles.size) return;
+    const btn = document.getElementById('sp-delete-btn');
+    btn.disabled    = true;
+    btn.textContent = 'Deleting...';
+    const results   = [];
+
+    for (const [itemId, file] of selectedSPFiles) {
+      try {
+        const resp = await fetch(SP_LOGIC_APP, {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({ siteId: file.siteId, itemId, accessToken })
+        });
+        results.push({ name: file.name, ok: resp.ok || resp.status === 202 });
+      } catch (e) { results.push({ name: file.name, ok: false }); }
+    }
+    showResult(results, 'Files deleted from SharePoint', 'Some files could not be deleted.');
+  }
+
+  /* ══════════════════════════════════════════
+     STORAGE TAB
+  ══════════════════════════════════════════ */
+  async function loadStorage() {
+    if (currentProvider === 'microsoft') await loadOneDrive();
+    else await loadGoogleDrive();
+  }
+
   async function loadOneDrive() {
     const grid = document.getElementById('storage-grid');
     grid.innerHTML = '<div class="empty-state">Scanning OneDrive...</div>';
     resetStorageUI();
-
-    document.getElementById('storage-badge-wrap').innerHTML =
-      '<span class="storage-badge onedrive">OneDrive</span>';
-
+    document.getElementById('storage-badge-wrap').innerHTML = '<span class="storage-badge onedrive">OneDrive</span>';
     try {
       const token = await getMicrosoftToken();
-      accessToken = token;
-
-      // Quota
+      accessToken  = token;
       const driveRes  = await fetch('https://graph.microsoft.com/v1.0/me/drive', { headers: { Authorization: 'Bearer ' + token } });
       const driveData = await driveRes.json();
-      if (driveData.quota) {
-        const used  = driveData.quota.used  || 0;
-        const total = driveData.quota.total || 1;
-        renderQuota(used, total, 'ms');
-      }
-
+      if (driveData.quota) renderQuota(driveData.quota.used || 0, driveData.quota.total || 1, 'ms');
       const files = [];
       await scanOneDriveFolder('root', '', token, files);
       if (!files.length) { grid.innerHTML = '<div class="empty-state">No files found in OneDrive.</div>'; return; }
@@ -421,39 +665,24 @@
     const data = await res.json();
     if (!data.value) return;
     for (const item of data.value) {
-      if (item.file) {
-        files.push({ id: item.id, name: item.name, size: item.size || 0, modified: item.lastModifiedDateTime, ext: item.name.includes('.') ? item.name.split('.').pop().toLowerCase() : 'other', path: path ? path + '/' + item.name : item.name, provider: 'microsoft' });
-      } else if (item.folder && files.length < 300) {
-        await scanOneDriveFolder(item.id, path ? path + '/' + item.name : item.name, token, files);
-      }
+      if (item.file) files.push({ id: item.id, name: item.name, size: item.size || 0, modified: item.lastModifiedDateTime, ext: item.name.includes('.') ? item.name.split('.').pop().toLowerCase() : 'other', path: path ? path + '/' + item.name : item.name, provider: 'microsoft' });
+      else if (item.folder && files.length < 300) await scanOneDriveFolder(item.id, path ? path + '/' + item.name : item.name, token, files);
     }
   }
 
-  /* ── Google Drive ── */
   async function loadGoogleDrive() {
     const grid = document.getElementById('storage-grid');
     grid.innerHTML = '<div class="empty-state">Scanning Google Drive...</div>';
     resetStorageUI();
-
-    document.getElementById('storage-badge-wrap').innerHTML =
-      '<span class="storage-badge gdrive">Google Drive</span>';
-
+    document.getElementById('storage-badge-wrap').innerHTML = '<span class="storage-badge gdrive">Google Drive</span>';
     try {
-      // Quota
       const aboutRes  = await fetch('https://www.googleapis.com/drive/v3/about?fields=storageQuota', { headers: { Authorization: 'Bearer ' + accessToken } });
       const aboutData = await aboutRes.json();
-      if (aboutData.storageQuota) {
-        const used  = parseInt(aboutData.storageQuota.usageInDrive || 0);
-        const total = parseInt(aboutData.storageQuota.limit || 1);
-        renderQuota(used, total, 'gd');
-      }
-
-      // List files — paginate up to 300
-      const files  = [];
+      if (aboutData.storageQuota) renderQuota(parseInt(aboutData.storageQuota.usageInDrive || 0), parseInt(aboutData.storageQuota.limit || 1), 'gd');
+      const files = [];
       let pageToken = null;
       do {
-        const url = 'https://www.googleapis.com/drive/v3/files?pageSize=100&fields=nextPageToken,files(id,name,size,mimeType,modifiedTime,parents)&orderBy=quotaBytesUsed desc'
-          + (pageToken ? '&pageToken=' + pageToken : '');
+        const url = 'https://www.googleapis.com/drive/v3/files?pageSize=100&fields=nextPageToken,files(id,name,size,mimeType,modifiedTime,parents)&orderBy=quotaBytesUsed desc' + (pageToken ? '&pageToken=' + pageToken : '');
         const res  = await fetch(url, { headers: { Authorization: 'Bearer ' + accessToken } });
         const data = await res.json();
         if (!data.files) break;
@@ -464,7 +693,6 @@
         }
         pageToken = data.nextPageToken;
       } while (pageToken && files.length < 300);
-
       if (!files.length) { grid.innerHTML = '<div class="empty-state">No files found in Google Drive.</div>'; return; }
       files.sort((a, b) => b.size - a.size);
       renderSizeBars(files, 'gd');
@@ -475,22 +703,11 @@
   }
 
   function detectGDriveExt(mimeType) {
-    const map = {
-      'application/vnd.google-apps.document':     'gdoc',
-      'application/vnd.google-apps.spreadsheet':  'gsheet',
-      'application/vnd.google-apps.presentation': 'gslides',
-      'application/vnd.google-apps.form':         'gform',
-      'video/':   'video',
-      'image/':   'image',
-      'audio/':   'audio',
-    };
-    for (const [k, v] of Object.entries(map)) {
-      if (mimeType.startsWith(k)) return v;
-    }
+    const map = { 'application/vnd.google-apps.document': 'gdoc', 'application/vnd.google-apps.spreadsheet': 'gsheet', 'application/vnd.google-apps.presentation': 'gslides', 'application/vnd.google-apps.form': 'gform', 'video/': 'video', 'image/': 'image', 'audio/': 'audio' };
+    for (const [k, v] of Object.entries(map)) { if (mimeType.startsWith(k)) return v; }
     return 'other';
   }
 
-  /* ── Shared storage rendering ── */
   function resetStorageUI() {
     selectedFiles.clear();
     document.getElementById('storage-count-num').textContent = '0';
@@ -560,17 +777,11 @@
     const btn = document.getElementById('storage-delete-btn');
     btn.disabled    = true;
     btn.textContent = 'Deleting...';
-
     const logicAppUrl = currentProvider === 'microsoft' ? ONEDRIVE_LOGIC_APP : GDRIVE_LOGIC_APP;
     const results     = [];
-
     for (const [fileId, file] of selectedFiles) {
       try {
-        const resp = await fetch(logicAppUrl, {
-          method:  'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body:    JSON.stringify({ fileId, accessToken })
-        });
+        const resp = await fetch(logicAppUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ fileId, accessToken }) });
         results.push({ name: file.name, ok: resp.ok || resp.status === 202 });
       } catch (e) { results.push({ name: file.name, ok: false }); }
     }
@@ -674,7 +885,7 @@
   }
 
   function resetAndBack() {
-    selectedSenders.clear(); selectedFiles.clear();
+    selectedSenders.clear(); selectedFiles.clear(); selectedSPFiles.clear();
     document.querySelectorAll('.item-card').forEach(c => c.classList.remove('selected'));
     document.getElementById('sel-count-num').textContent     = '0';
     document.getElementById('mail-delete-btn').disabled      = true;
@@ -683,14 +894,22 @@
     document.getElementById('storage-size-num').textContent  = '0 MB';
     document.getElementById('storage-delete-btn').disabled   = true;
     document.getElementById('storage-delete-btn').textContent = 'Delete files';
+    document.getElementById('sp-count-num').textContent      = '0';
+    document.getElementById('sp-size-num').textContent       = '0 MB';
+    document.getElementById('sp-delete-btn').disabled        = true;
+    document.getElementById('sp-delete-btn').textContent     = 'Delete files';
     show('main');
   }
 
   function signOut() {
     if (confirm('Sign out of Mail Cleaner?')) {
-      currentAccount = null; accessToken = null; currentProvider = null;
-      selectedSenders.clear(); selectedFiles.clear();
+      currentAccount = null; accessToken = null; currentProvider = null; currentSiteId = null; currentDriveId = null;
+      selectedSenders.clear(); selectedFiles.clear(); selectedSPFiles.clear();
       document.getElementById('storage-grid').innerHTML = '';
+      document.getElementById('sp-grid').innerHTML      = '';
+      document.getElementById('sp-site-wrap').style.display = 'none';
+      document.getElementById('sp-lib-wrap').style.display  = 'none';
+      document.getElementById('sp-note').style.display      = 'none';
       show('login');
     }
   }
