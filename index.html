@@ -15,7 +15,6 @@
       --blue: #185FA5; --blue-light: #E6F1FB; --blue-dark: #0C447C;
       --red: #A32D2D; --red-light: #FCEBEB;
       --green: #3B6D11; --green-light: #EAF3DE;
-      --amber: #854F0B; --amber-light: #FAEEDA;
       --radius-md: 8px; --radius-lg: 12px;
     }
     @media (prefers-color-scheme: dark) {
@@ -25,15 +24,12 @@
         --text: #e8e6df; --text-sec: #b4b2a9;
         --blue-light: #0C447C; --blue-dark: #B5D4F4;
         --red-light: #501313; --green-light: #173404;
-        --amber-light: #412402;
       }
     }
     html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.5; }
     .page { min-height: 100vh; display: flex; flex-direction: column; }
     .screen { display: none; flex: 1; }
     .screen.active { display: flex; flex-direction: column; }
-
-    /* Topbar */
     .topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; background: var(--bg-card); border-bottom: 0.5px solid var(--border); }
     .logo { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 600; color: var(--text); }
     .logo-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--blue); }
@@ -41,16 +37,12 @@
     .user-pill:hover { background: var(--border); }
     .avatar { width: 24px; height: 24px; border-radius: 50%; background: var(--blue-light); color: var(--blue-dark); font-size: 10px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
     .avatar.google { background: #fce8e6; color: #c5221f; }
-
-    /* Tab nav */
-    .tab-nav { display: flex; gap: 0; background: var(--bg-card); border-bottom: 0.5px solid var(--border); padding: 0 24px; }
+    .tab-nav { display: flex; background: var(--bg-card); border-bottom: 0.5px solid var(--border); padding: 0 24px; }
     .tab-btn { padding: 12px 18px; font-size: 13px; font-weight: 500; color: var(--text-sec); background: transparent; border: none; border-bottom: 2px solid transparent; cursor: pointer; transition: color .15s, border-color .15s; margin-bottom: -0.5px; }
     .tab-btn:hover { color: var(--text); }
     .tab-btn.active { color: var(--blue); border-bottom-color: var(--blue); }
     .tab-panel { display: none; flex: 1; flex-direction: column; }
     .tab-panel.active { display: flex; flex-direction: column; }
-
-    /* Login */
     #screen-login { align-items: center; justify-content: center; padding: 40px 20px; }
     .login-card { background: var(--bg-card); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 40px 36px; width: 100%; max-width: 420px; text-align: center; }
     .login-card h1 { font-size: 22px; font-weight: 600; margin-bottom: 8px; }
@@ -65,52 +57,45 @@
     .divider { display: flex; align-items: center; gap: 12px; margin: 4px 0; color: var(--text-hint); font-size: 12px; }
     .divider::before, .divider::after { content: ''; flex: 1; height: 0.5px; background: var(--border); }
     .consent-note { font-size: 11px; color: var(--text-hint); margin-top: 14px; line-height: 1.6; }
-
-    /* Loading */
     #screen-loading { align-items: center; justify-content: center; }
     .loading-wrap { text-align: center; padding: 60px 20px; }
     .spinner { width: 30px; height: 30px; border: 2.5px solid var(--border-md); border-top-color: var(--blue); border-radius: 50%; animation: spin .7s linear infinite; margin: 0 auto 16px; }
     @keyframes spin { to { transform: rotate(360deg); } }
     .loading-wrap p { font-size: 14px; color: var(--text-sec); }
-
-    /* Main content area */
     #screen-main { padding: 0; }
     .main-body { padding: 24px 24px 100px; flex: 1; }
     .section-label { font-size: 11px; font-weight: 600; color: var(--text-hint); text-transform: uppercase; letter-spacing: .07em; margin-bottom: 14px; }
     .provider-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; padding: 3px 10px; border-radius: 20px; margin-bottom: 16px; font-weight: 500; }
     .provider-badge.microsoft { background: var(--blue-light); color: var(--blue-dark); }
     .provider-badge.google { background: #fce8e6; color: #c5221f; }
-
-    /* Cards grid */
+    .storage-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 500; padding: 5px 12px; border-radius: 20px; margin-bottom: 16px; }
+    .storage-badge.onedrive { background: var(--blue-light); color: var(--blue-dark); }
+    .storage-badge.gdrive { background: #fce8e6; color: #c5221f; }
     .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px; margin-bottom: 20px; }
     .item-card { background: var(--bg-card); border: 0.5px solid var(--border); border-radius: var(--radius-md); padding: 14px 16px; cursor: pointer; transition: border-color .15s, background .15s; user-select: none; }
     .item-card:hover { border-color: var(--border-md); }
     .item-card.selected { border: 1.5px solid var(--blue); background: var(--blue-light); }
     .item-card.selected .item-name { color: var(--blue-dark); }
     .item-card.selected .item-sub, .item-card.selected .item-meta { color: var(--blue); }
+    .item-card.selected .meta-dot { background: var(--blue); }
     .item-name { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .item-sub { font-size: 11px; color: var(--text-hint); margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .item-meta { font-size: 11px; color: var(--text-sec); }
     .meta-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--border-md); margin-right: 5px; vertical-align: middle; }
-    .item-card.selected .meta-dot { background: var(--blue); }
-
-    /* Action bar */
     .action-bar { display: flex; align-items: center; justify-content: space-between; background: var(--bg-card); border: 0.5px solid var(--border); border-radius: var(--radius-md); padding: 12px 18px; position: sticky; bottom: 16px; margin: 0 24px 24px; }
     .sel-count { font-size: 13px; color: var(--text-sec); }
     .sel-count strong { color: var(--text); }
     .delete-btn { padding: 9px 22px; background: var(--red); color: var(--red-light); border: none; border-radius: var(--radius-md); font-size: 13px; font-weight: 600; cursor: pointer; transition: opacity .15s; }
     .delete-btn:disabled { opacity: .35; cursor: not-allowed; }
     .delete-btn:not(:disabled):hover { opacity: .88; }
-
-    /* OneDrive size bar */
     .size-bar-wrap { margin-bottom: 20px; }
     .size-bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
     .size-bar-label { font-size: 12px; color: var(--text-sec); width: 80px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .size-bar-track { flex: 1; height: 6px; background: var(--bg-sec); border-radius: 3px; overflow: hidden; }
-    .size-bar-fill { height: 100%; border-radius: 3px; background: var(--blue); }
+    .size-bar-fill { height: 100%; border-radius: 3px; }
+    .size-bar-fill.ms { background: var(--blue); }
+    .size-bar-fill.gd { background: #EA4335; }
     .size-bar-val { font-size: 11px; color: var(--text-hint); width: 52px; text-align: right; flex-shrink: 0; }
-
-    /* Result */
     #screen-result { align-items: center; justify-content: center; padding: 40px 20px; }
     .result-card { background: var(--bg-card); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 36px 32px; width: 100%; max-width: 440px; text-align: center; }
     .result-icon { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; }
@@ -126,6 +111,13 @@
     .back-btn { padding: 9px 22px; background: transparent; border: 0.5px solid var(--border-md); border-radius: var(--radius-md); font-size: 13px; color: var(--text); cursor: pointer; transition: background .15s; }
     .back-btn:hover { background: var(--bg-sec); }
     .empty-state { grid-column: 1 / -1; text-align: center; padding: 40px 20px; font-size: 14px; color: var(--text-sec); }
+    .quota-row { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding: 12px 16px; background: var(--bg-card); border: 0.5px solid var(--border); border-radius: var(--radius-md); font-size: 13px; }
+    .quota-label { color: var(--text-sec); flex-shrink: 0; }
+    .quota-track { flex: 1; height: 8px; background: var(--bg-sec); border-radius: 4px; overflow: hidden; }
+    .quota-fill { height: 100%; border-radius: 4px; }
+    .quota-fill.ms { background: var(--blue); }
+    .quota-fill.gd { background: #EA4335; }
+    .quota-val { color: var(--text); font-weight: 500; flex-shrink: 0; }
   </style>
 </head>
 <body>
@@ -139,7 +131,7 @@
     <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:40px 20px;">
       <div class="login-card">
         <h1>Clean your inbox</h1>
-        <p>Sign in to see which companies are emailing you and what is filling your OneDrive — then remove them in one click.</p>
+        <p>Sign in to delete unwanted emails and clean up your cloud storage — all in one place.</p>
         <div class="provider-btns">
           <button class="ms-btn" onclick="startMicrosoftLogin()">
             <svg viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg">
@@ -177,7 +169,7 @@
     </div>
   </div>
 
-  <!-- MAIN (tabbed) -->
+  <!-- MAIN -->
   <div class="screen" id="screen-main">
     <div class="topbar">
       <div class="logo"><div class="logo-dot"></div>Mail cleaner</div>
@@ -189,7 +181,7 @@
     </div>
     <div class="tab-nav">
       <button class="tab-btn active" onclick="switchTab('mail')">Inbox cleaner</button>
-      <button class="tab-btn" onclick="switchTab('onedrive')" id="onedrive-tab-btn">OneDrive</button>
+      <button class="tab-btn" onclick="switchTab('storage')">Storage</button>
     </div>
 
     <!-- MAIL TAB -->
@@ -205,20 +197,21 @@
       </div>
     </div>
 
-    <!-- ONEDRIVE TAB -->
-    <div class="tab-panel" id="tab-onedrive">
+    <!-- STORAGE TAB -->
+    <div class="tab-panel" id="tab-storage">
       <div class="main-body">
-        <div id="od-provider-note" style="margin-bottom:16px;font-size:13px;color:var(--text-sec);display:none;"></div>
-        <div id="od-size-section" style="display:none;">
+        <div id="storage-badge-wrap"></div>
+        <div id="quota-wrap" style="display:none;"></div>
+        <div id="storage-size-section" style="display:none;">
           <div class="section-label">Storage by file type</div>
-          <div class="size-bar-wrap" id="od-size-bars"></div>
+          <div class="size-bar-wrap" id="storage-size-bars"></div>
         </div>
-        <div class="section-label" id="od-files-label" style="display:none;">Files — select to delete</div>
-        <div class="card-grid" id="onedrive-grid"></div>
+        <div class="section-label" id="storage-files-label" style="display:none;">Files — select to delete</div>
+        <div class="card-grid" id="storage-grid"></div>
       </div>
       <div class="action-bar">
-        <div class="sel-count">Selected: <strong id="od-count-num">0</strong> file(s) — <strong id="od-size-num">0 MB</strong></div>
-        <button class="delete-btn" id="od-delete-btn" disabled onclick="runOneDriveDeletion()">Delete files</button>
+        <div class="sel-count">Selected: <strong id="storage-count-num">0</strong> file(s) — <strong id="storage-size-num">0 MB</strong></div>
+        <button class="delete-btn" id="storage-delete-btn" disabled onclick="runStorageDeletion()">Delete files</button>
       </div>
     </div>
   </div>
@@ -236,11 +229,12 @@
 </div>
 <script>
   /* ─── CONFIG ─── */
-  const MS_CLIENT_ID     = 'f4e717be-2d6e-4fc1-97f6-ce25c3c399e4';
-  const GOOGLE_CLIENT_ID = '943640562909-qcsuqmgmkeckv4lh6ru1hcr6n2hso0us.apps.googleusercontent.com';
-  const MAIL_LOGIC_APP   = 'https://prod-20.germanywestcentral.logic.azure.com:443/workflows/b31e60ebbd124050a2fd58b1c32e3127/triggers/When_an_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_an_HTTP_request_is_received%2Frun&sv=1.0&sig=rVwypNcDmNXR3Y2ETkzlYxEyHOFXeATV_6rvNcBjn3c';
+  const MS_CLIENT_ID       = 'f4e717be-2d6e-4fc1-97f6-ce25c3c399e4';
+  const GOOGLE_CLIENT_ID   = '943640562909-qcsuqmgmkeckv4lh6ru1hcr6n2hso0us.apps.googleusercontent.com';
+  const MAIL_LOGIC_APP     = 'https://prod-20.germanywestcentral.logic.azure.com:443/workflows/b31e60ebbd124050a2fd58b1c32e3127/triggers/When_an_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_an_HTTP_request_is_received%2Frun&sv=1.0&sig=rVwypNcDmNXR3Y2ETkzlYxEyHOFXeATV_6rvNcBjn3c';
   const ONEDRIVE_LOGIC_APP = 'https://prod-20.germanywestcentral.logic.azure.com:443/workflows/eb8954be5cc14a46944947d8e9a75ffe/triggers/When_an_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_an_HTTP_request_is_received%2Frun&sv=1.0&sig=7qw-NafSDOzKuobe_Pt0k5j1t7TVC963pePDuc0PESc';
-  const MS_SCOPES        = ['User.Read', 'Mail.Read', 'Mail.ReadWrite', 'Files.ReadWrite'];
+  const GDRIVE_LOGIC_APP   = 'https://prod-07.germanywestcentral.logic.azure.com:443/workflows/3861886e77384a1c98d8da182c33a4b9/triggers/When_an_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_an_HTTP_request_is_received%2Frun&sv=1.0&sig=IkFwViw13TyOSGiWgoF78CT78VqntPigV12mV10w8Qo';
+  const MS_SCOPES          = ['User.Read', 'Mail.Read', 'Mail.ReadWrite', 'Files.ReadWrite'];
 
   /* ─── STATE ─── */
   let msalInstance    = null;
@@ -248,10 +242,9 @@
   let accessToken     = null;
   let currentProvider = null;
   let selectedSenders = new Set();
-  let selectedFiles   = new Map(); // fileId → { name, size }
-  let activeTab       = 'mail';
+  let selectedFiles   = new Map();
 
-  /* ─── SCREEN + TAB HELPERS ─── */
+  /* ─── HELPERS ─── */
   function show(id) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById('screen-' + id).classList.add('active');
@@ -261,18 +254,12 @@
     document.getElementById('loading-msg').textContent = msg;
   }
   function switchTab(tab) {
-    activeTab = tab;
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
     document.querySelector(`.tab-btn[onclick="switchTab('${tab}')"]`).classList.add('active');
     document.getElementById('tab-' + tab).classList.add('active');
-    if (tab === 'onedrive' && currentProvider === 'microsoft' && document.getElementById('onedrive-grid').children.length === 0) {
-      loadOneDrive();
-    }
-    if (tab === 'onedrive' && currentProvider === 'google') {
-      const note = document.getElementById('od-provider-note');
-      note.style.display = 'block';
-      note.textContent = 'OneDrive is only available for Microsoft accounts. Sign in with Microsoft to use this feature.';
+    if (tab === 'storage' && document.getElementById('storage-grid').children.length === 0) {
+      loadStorage();
     }
   }
 
@@ -282,17 +269,13 @@
   async function startMicrosoftLogin() {
     try {
       const config = {
-        auth: {
-          clientId:    MS_CLIENT_ID,
-          authority:   'https://login.microsoftonline.com/common',
-          redirectUri: window.location.origin + window.location.pathname
-        },
+        auth: { clientId: MS_CLIENT_ID, authority: 'https://login.microsoftonline.com/common', redirectUri: window.location.origin + window.location.pathname },
         cache: { cacheLocation: 'sessionStorage' }
       };
       msalInstance = new msal.PublicClientApplication(config);
       await msalInstance.initialize();
       setLoading('Opening Microsoft sign-in...');
-      const result = await msalInstance.loginPopup({ scopes: MS_SCOPES });
+      const result    = await msalInstance.loginPopup({ scopes: MS_SCOPES });
       currentAccount  = result.account;
       accessToken     = result.accessToken;
       currentProvider = 'microsoft';
@@ -317,24 +300,15 @@
     setLoading('Scanning your inbox...');
     try {
       const token = await getMicrosoftToken();
-      accessToken = token;
-      const res  = await fetch('https://graph.microsoft.com/v1.0/me/messages?$select=from&$top=250&$orderby=receivedDateTime desc', {
-        headers: { Authorization: 'Bearer ' + token }
-      });
-      const data = await res.json();
+      accessToken  = token;
+      const res    = await fetch('https://graph.microsoft.com/v1.0/me/messages?$select=from&$top=250&$orderby=receivedDateTime desc', { headers: { Authorization: 'Bearer ' + token } });
+      const data   = await res.json();
       if (!data.value) throw new Error(data.error?.message || 'Could not read inbox.');
-      const senders = groupSenders(data.value.map(m => ({
-        address: m.from?.emailAddress?.address || '',
-        name:    m.from?.emailAddress?.name    || ''
-      })));
-      const email = currentAccount.username || '';
-      setUserUI(email, 'microsoft');
+      const senders = groupSenders(data.value.map(m => ({ address: m.from?.emailAddress?.address || '', name: m.from?.emailAddress?.name || '' })));
+      setUserUI(currentAccount.username || '', 'microsoft');
       renderSenders(senders);
       show('main');
-    } catch (e) {
-      show('login');
-      alert('Could not load inbox: ' + (e.message || e));
-    }
+    } catch (e) { show('login'); alert('Could not load inbox: ' + (e.message || e)); }
   }
 
   /* ══════════════════════════════════════════
@@ -344,14 +318,10 @@
     setLoading('Opening Google sign-in...');
     const client = google.accounts.oauth2.initTokenClient({
       client_id: GOOGLE_CLIENT_ID,
-      scope: 'scope: 'https://www.googleapis.com/auth/gmail.modify https://mail.google.com/ https://www.googleapis.com/auth/drive',',
+      scope: 'https://www.googleapis.com/auth/gmail.modify https://mail.google.com/ https://www.googleapis.com/auth/drive',
       prompt: 'consent',
       callback: async (response) => {
-        if (response.error) {
-          show('login');
-          alert('Google sign-in failed: ' + response.error);
-          return;
-        }
+        if (response.error) { show('login'); alert('Google sign-in failed: ' + response.error); return; }
         accessToken     = response.access_token;
         currentProvider = 'google';
         await loadGoogleSenders();
@@ -363,28 +333,19 @@
   async function loadGoogleSenders() {
     setLoading('Scanning your Gmail inbox...');
     try {
-      const profileRes = await fetch('https://www.googleapis.com/gmail/v1/users/me/profile', {
-        headers: { Authorization: 'Bearer ' + accessToken }
-      });
-      const profile = await profileRes.json();
-      const email   = profile.emailAddress || 'Gmail user';
-
-      const listRes  = await fetch('https://www.googleapis.com/gmail/v1/users/me/messages?maxResults=200&labelIds=INBOX', {
-        headers: { Authorization: 'Bearer ' + accessToken }
-      });
-      const listData = await listRes.json();
+      const profileRes = await fetch('https://www.googleapis.com/gmail/v1/users/me/profile', { headers: { Authorization: 'Bearer ' + accessToken } });
+      const profile    = await profileRes.json();
+      const email      = profile.emailAddress || 'Gmail user';
+      const listRes    = await fetch('https://www.googleapis.com/gmail/v1/users/me/messages?maxResults=200&labelIds=INBOX', { headers: { Authorization: 'Bearer ' + accessToken } });
+      const listData   = await listRes.json();
       if (!listData.messages) throw new Error('Could not read Gmail inbox.');
-
       setLoading('Reading senders (' + listData.messages.length + ' emails)...');
-
       const senderMap = {};
       const batchSize = 20;
       for (let i = 0; i < Math.min(listData.messages.length, 200); i += batchSize) {
         const batch = listData.messages.slice(i, i + batchSize);
         await Promise.all(batch.map(async (msg) => {
-          const r = await fetch(`https://www.googleapis.com/gmail/v1/users/me/messages/${msg.id}?format=metadata&metadataHeaders=From`, {
-            headers: { Authorization: 'Bearer ' + accessToken }
-          });
+          const r = await fetch(`https://www.googleapis.com/gmail/v1/users/me/messages/${msg.id}?format=metadata&metadataHeaders=From`, { headers: { Authorization: 'Bearer ' + accessToken } });
           const d = await r.json();
           const fromHeader = d.payload?.headers?.find(h => h.name === 'From')?.value || '';
           const parsed     = parseFromHeader(fromHeader);
@@ -395,15 +356,11 @@
           senderMap[domain].count++;
         }));
       }
-
       const senders = Object.values(senderMap).sort((a, b) => b.count - a.count);
       setUserUI(email, 'google');
       renderSenders(senders);
       show('main');
-    } catch (e) {
-      show('login');
-      alert('Could not load Gmail: ' + (e.message || e));
-    }
+    } catch (e) { show('login'); alert('Could not load Gmail: ' + (e.message || e)); }
   }
 
   function parseFromHeader(header) {
@@ -413,93 +370,170 @@
   }
 
   /* ══════════════════════════════════════════
-     ONEDRIVE SCAN
+     STORAGE TAB — smart routing
   ══════════════════════════════════════════ */
+  async function loadStorage() {
+    if (currentProvider === 'microsoft') {
+      await loadOneDrive();
+    } else {
+      await loadGoogleDrive();
+    }
+  }
+
+  /* ── OneDrive ── */
   async function loadOneDrive() {
-    const grid = document.getElementById('onedrive-grid');
+    const grid = document.getElementById('storage-grid');
     grid.innerHTML = '<div class="empty-state">Scanning OneDrive...</div>';
-    document.getElementById('od-files-label').style.display = 'none';
-    document.getElementById('od-size-section').style.display = 'none';
+    resetStorageUI();
+
+    document.getElementById('storage-badge-wrap').innerHTML =
+      '<span class="storage-badge onedrive">OneDrive</span>';
 
     try {
       const token = await getMicrosoftToken();
       accessToken = token;
 
-      const files = [];
-      await scanFolder('root', '', token, files);
-
-      if (!files.length) {
-        grid.innerHTML = '<div class="empty-state">No files found in OneDrive.</div>';
-        return;
+      // Quota
+      const driveRes  = await fetch('https://graph.microsoft.com/v1.0/me/drive', { headers: { Authorization: 'Bearer ' + token } });
+      const driveData = await driveRes.json();
+      if (driveData.quota) {
+        const used  = driveData.quota.used  || 0;
+        const total = driveData.quota.total || 1;
+        renderQuota(used, total, 'ms');
       }
 
+      const files = [];
+      await scanOneDriveFolder('root', '', token, files);
+      if (!files.length) { grid.innerHTML = '<div class="empty-state">No files found in OneDrive.</div>'; return; }
       files.sort((a, b) => b.size - a.size);
-      renderSizeBars(files);
-      renderOneDriveFiles(files);
-      document.getElementById('od-files-label').style.display = 'block';
-      document.getElementById('od-size-section').style.display = 'block';
-    } catch (e) {
-      grid.innerHTML = `<div class="empty-state">Could not load OneDrive: ${esc(e.message)}</div>`;
-    }
+      renderSizeBars(files, 'ms');
+      renderStorageFiles(files);
+      document.getElementById('storage-files-label').style.display  = 'block';
+      document.getElementById('storage-size-section').style.display = 'block';
+    } catch (e) { grid.innerHTML = `<div class="empty-state">Could not load OneDrive: ${esc(e.message)}</div>`; }
   }
 
-  async function scanFolder(folderId, path, token, files) {
+  async function scanOneDriveFolder(folderId, path, token, files) {
     const url = folderId === 'root'
       ? 'https://graph.microsoft.com/v1.0/me/drive/root/children?$select=id,name,size,file,folder,lastModifiedDateTime&$top=100'
       : `https://graph.microsoft.com/v1.0/me/drive/items/${folderId}/children?$select=id,name,size,file,folder,lastModifiedDateTime&$top=100`;
-
     const res  = await fetch(url, { headers: { Authorization: 'Bearer ' + token } });
     const data = await res.json();
     if (!data.value) return;
-
     for (const item of data.value) {
       if (item.file) {
-        files.push({
-          id:       item.id,
-          name:     item.name,
-          size:     item.size || 0,
-          modified: item.lastModifiedDateTime,
-          ext:      item.name.includes('.') ? item.name.split('.').pop().toLowerCase() : 'other',
-          path:     path ? path + '/' + item.name : item.name
-        });
+        files.push({ id: item.id, name: item.name, size: item.size || 0, modified: item.lastModifiedDateTime, ext: item.name.includes('.') ? item.name.split('.').pop().toLowerCase() : 'other', path: path ? path + '/' + item.name : item.name, provider: 'microsoft' });
       } else if (item.folder && files.length < 300) {
-        await scanFolder(item.id, path ? path + '/' + item.name : item.name, token, files);
+        await scanOneDriveFolder(item.id, path ? path + '/' + item.name : item.name, token, files);
       }
     }
   }
 
-  function renderSizeBars(files) {
-    const typeMap = {};
-    for (const f of files) {
-      const ext = f.ext || 'other';
-      if (!typeMap[ext]) typeMap[ext] = 0;
-      typeMap[ext] += f.size;
+  /* ── Google Drive ── */
+  async function loadGoogleDrive() {
+    const grid = document.getElementById('storage-grid');
+    grid.innerHTML = '<div class="empty-state">Scanning Google Drive...</div>';
+    resetStorageUI();
+
+    document.getElementById('storage-badge-wrap').innerHTML =
+      '<span class="storage-badge gdrive">Google Drive</span>';
+
+    try {
+      // Quota
+      const aboutRes  = await fetch('https://www.googleapis.com/drive/v3/about?fields=storageQuota', { headers: { Authorization: 'Bearer ' + accessToken } });
+      const aboutData = await aboutRes.json();
+      if (aboutData.storageQuota) {
+        const used  = parseInt(aboutData.storageQuota.usageInDrive || 0);
+        const total = parseInt(aboutData.storageQuota.limit || 1);
+        renderQuota(used, total, 'gd');
+      }
+
+      // List files — paginate up to 300
+      const files  = [];
+      let pageToken = null;
+      do {
+        const url = 'https://www.googleapis.com/drive/v3/files?pageSize=100&fields=nextPageToken,files(id,name,size,mimeType,modifiedTime,parents)&orderBy=quotaBytesUsed desc'
+          + (pageToken ? '&pageToken=' + pageToken : '');
+        const res  = await fetch(url, { headers: { Authorization: 'Bearer ' + accessToken } });
+        const data = await res.json();
+        if (!data.files) break;
+        for (const f of data.files) {
+          if (f.mimeType === 'application/vnd.google-apps.folder') continue;
+          const ext = f.name.includes('.') ? f.name.split('.').pop().toLowerCase() : detectGDriveExt(f.mimeType);
+          files.push({ id: f.id, name: f.name, size: parseInt(f.size || 0), modified: f.modifiedTime, ext, path: f.name, provider: 'google' });
+        }
+        pageToken = data.nextPageToken;
+      } while (pageToken && files.length < 300);
+
+      if (!files.length) { grid.innerHTML = '<div class="empty-state">No files found in Google Drive.</div>'; return; }
+      files.sort((a, b) => b.size - a.size);
+      renderSizeBars(files, 'gd');
+      renderStorageFiles(files);
+      document.getElementById('storage-files-label').style.display  = 'block';
+      document.getElementById('storage-size-section').style.display = 'block';
+    } catch (e) { grid.innerHTML = `<div class="empty-state">Could not load Google Drive: ${esc(e.message)}</div>`; }
+  }
+
+  function detectGDriveExt(mimeType) {
+    const map = {
+      'application/vnd.google-apps.document':     'gdoc',
+      'application/vnd.google-apps.spreadsheet':  'gsheet',
+      'application/vnd.google-apps.presentation': 'gslides',
+      'application/vnd.google-apps.form':         'gform',
+      'video/':   'video',
+      'image/':   'image',
+      'audio/':   'audio',
+    };
+    for (const [k, v] of Object.entries(map)) {
+      if (mimeType.startsWith(k)) return v;
     }
+    return 'other';
+  }
+
+  /* ── Shared storage rendering ── */
+  function resetStorageUI() {
+    selectedFiles.clear();
+    document.getElementById('storage-count-num').textContent = '0';
+    document.getElementById('storage-size-num').textContent  = '0 MB';
+    document.getElementById('storage-delete-btn').disabled   = true;
+    document.getElementById('storage-files-label').style.display  = 'none';
+    document.getElementById('storage-size-section').style.display = 'none';
+    document.getElementById('quota-wrap').style.display = 'none';
+  }
+
+  function renderQuota(used, total, cls) {
+    const pct  = Math.min(Math.round(used / total * 100), 100);
+    const wrap = document.getElementById('quota-wrap');
+    wrap.style.display = 'block';
+    wrap.innerHTML = `
+      <div class="quota-row">
+        <span class="quota-label">Used storage</span>
+        <div class="quota-track"><div class="quota-fill ${cls}" style="width:${pct}%"></div></div>
+        <span class="quota-val">${formatSize(used)} / ${formatSize(total)}</span>
+      </div>
+    `;
+  }
+
+  function renderSizeBars(files, cls) {
+    const typeMap = {};
+    for (const f of files) { if (!typeMap[f.ext]) typeMap[f.ext] = 0; typeMap[f.ext] += f.size; }
     const sorted = Object.entries(typeMap).sort((a, b) => b[1] - a[1]).slice(0, 6);
     const max    = sorted[0]?.[1] || 1;
-    const wrap   = document.getElementById('od-size-bars');
-    wrap.innerHTML = sorted.map(([ext, size]) => `
+    document.getElementById('storage-size-bars').innerHTML = sorted.map(([ext, size]) => `
       <div class="size-bar-row">
         <div class="size-bar-label">.${esc(ext)}</div>
-        <div class="size-bar-track"><div class="size-bar-fill" style="width:${Math.round(size/max*100)}%"></div></div>
+        <div class="size-bar-track"><div class="size-bar-fill ${cls}" style="width:${Math.round(size/max*100)}%"></div></div>
         <div class="size-bar-val">${formatSize(size)}</div>
       </div>
     `).join('');
   }
 
-  function renderOneDriveFiles(files) {
-    const grid = document.getElementById('onedrive-grid');
+  function renderStorageFiles(files) {
+    const grid = document.getElementById('storage-grid');
     grid.innerHTML = '';
-    selectedFiles.clear();
-    document.getElementById('od-count-num').textContent = '0';
-    document.getElementById('od-size-num').textContent  = '0 MB';
-    document.getElementById('od-delete-btn').disabled   = true;
-
     for (const f of files) {
-      const card = document.createElement('div');
+      const card     = document.createElement('div');
       card.className = 'item-card';
-      card.dataset.id   = f.id;
-      card.dataset.size = f.size;
       const modified = f.modified ? new Date(f.modified).toLocaleDateString() : '';
       card.innerHTML = `
         <div class="item-name">${esc(f.name)}</div>
@@ -512,44 +546,39 @@
   }
 
   function toggleFile(card, file) {
-    if (selectedFiles.has(file.id)) {
-      selectedFiles.delete(file.id);
-      card.classList.remove('selected');
-    } else {
-      selectedFiles.set(file.id, file);
-      card.classList.add('selected');
-    }
+    if (selectedFiles.has(file.id)) { selectedFiles.delete(file.id); card.classList.remove('selected'); }
+    else { selectedFiles.set(file.id, file); card.classList.add('selected'); }
     const n     = selectedFiles.size;
     const bytes = Array.from(selectedFiles.values()).reduce((s, f) => s + f.size, 0);
-    document.getElementById('od-count-num').textContent = n;
-    document.getElementById('od-size-num').textContent  = formatSize(bytes);
-    document.getElementById('od-delete-btn').disabled   = n === 0;
+    document.getElementById('storage-count-num').textContent = n;
+    document.getElementById('storage-size-num').textContent  = formatSize(bytes);
+    document.getElementById('storage-delete-btn').disabled   = n === 0;
   }
 
-  async function runOneDriveDeletion() {
+  async function runStorageDeletion() {
     if (!selectedFiles.size) return;
-    const btn = document.getElementById('od-delete-btn');
+    const btn = document.getElementById('storage-delete-btn');
     btn.disabled    = true;
     btn.textContent = 'Deleting...';
 
-    const results = [];
+    const logicAppUrl = currentProvider === 'microsoft' ? ONEDRIVE_LOGIC_APP : GDRIVE_LOGIC_APP;
+    const results     = [];
+
     for (const [fileId, file] of selectedFiles) {
       try {
-        const resp = await fetch(ONEDRIVE_LOGIC_APP, {
+        const resp = await fetch(logicAppUrl, {
           method:  'POST',
           headers: { 'Content-Type': 'application/json' },
           body:    JSON.stringify({ fileId, accessToken })
         });
         results.push({ name: file.name, ok: resp.ok || resp.status === 202 });
-      } catch (e) {
-        results.push({ name: file.name, ok: false });
-      }
+      } catch (e) { results.push({ name: file.name, ok: false }); }
     }
     showResult(results, 'Files deleted', 'Some files could not be deleted.');
   }
 
   /* ══════════════════════════════════════════
-     MAIL SHARED HELPERS
+     MAIL TAB
   ══════════════════════════════════════════ */
   function groupSenders(messages) {
     const map = {};
@@ -573,16 +602,9 @@
     avatar.textContent = initials;
     avatar.className   = 'avatar ' + provider;
     document.getElementById('user-email-display').textContent = email;
-
-    const badgeWrap = document.getElementById('provider-badge-wrap');
-    const label     = provider === 'google' ? 'Gmail' : 'Microsoft';
-    const cls       = provider === 'google' ? 'google' : 'microsoft';
-    badgeWrap.innerHTML = `<span class="provider-badge ${cls}">${label} account</span>`;
-
-    if (provider === 'google') {
-      document.getElementById('onedrive-tab-btn').style.opacity = '0.4';
-    }
-
+    const label = provider === 'google' ? 'Gmail' : 'Microsoft';
+    const cls   = provider === 'google' ? 'google' : 'microsoft';
+    document.getElementById('provider-badge-wrap').innerHTML = `<span class="provider-badge ${cls}">${label} account</span>`;
     currentAccount = currentAccount || { username: email, localAccountId: btoa(email).replace(/=/g, '') };
   }
 
@@ -590,17 +612,12 @@
     const grid = document.getElementById('sender-grid');
     grid.innerHTML = '';
     selectedSenders.clear();
-    document.getElementById('sel-count-num').textContent     = '0';
-    document.getElementById('mail-delete-btn').disabled      = true;
-
-    if (!senders.length) {
-      grid.innerHTML = '<div class="empty-state">No senders found in your recent inbox.</div>';
-      return;
-    }
+    document.getElementById('sel-count-num').textContent = '0';
+    document.getElementById('mail-delete-btn').disabled  = true;
+    if (!senders.length) { grid.innerHTML = '<div class="empty-state">No senders found in your recent inbox.</div>'; return; }
     for (const s of senders) {
-      const card = document.createElement('div');
-      card.className      = 'item-card';
-      card.dataset.domain = s.domain;
+      const card     = document.createElement('div');
+      card.className = 'item-card';
       card.innerHTML = `
         <div class="item-name">${esc(s.name)}</div>
         <div class="item-sub">${esc(s.domain)}</div>
@@ -612,16 +629,11 @@
   }
 
   function toggleSender(card, domain) {
-    if (selectedSenders.has(domain)) {
-      selectedSenders.delete(domain);
-      card.classList.remove('selected');
-    } else {
-      selectedSenders.add(domain);
-      card.classList.add('selected');
-    }
+    if (selectedSenders.has(domain)) { selectedSenders.delete(domain); card.classList.remove('selected'); }
+    else { selectedSenders.add(domain); card.classList.add('selected'); }
     const n = selectedSenders.size;
-    document.getElementById('sel-count-num').textContent     = n;
-    document.getElementById('mail-delete-btn').disabled      = n === 0;
+    document.getElementById('sel-count-num').textContent = n;
+    document.getElementById('mail-delete-btn').disabled  = n === 0;
   }
 
   async function runMailDeletion() {
@@ -629,38 +641,23 @@
     const btn = document.getElementById('mail-delete-btn');
     btn.disabled    = true;
     btn.textContent = 'Running...';
-
     const userId  = currentAccount?.localAccountId || currentAccount?.homeAccountId || btoa(currentAccount?.username || 'user').replace(/=/g, '');
-    const domains = Array.from(selectedSenders);
     const results = [];
-
-    for (const domain of domains) {
+    for (const domain of Array.from(selectedSenders)) {
       try {
-        const resp = await fetch(MAIL_LOGIC_APP, {
-          method:  'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body:    JSON.stringify({ userId, senderDomain: domain, accessToken, provider: currentProvider })
-        });
+        const resp = await fetch(MAIL_LOGIC_APP, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ userId, senderDomain: domain, accessToken, provider: currentProvider }) });
         results.push({ name: domain, ok: resp.ok || resp.status === 202 });
-      } catch (e) {
-        results.push({ name: domain, ok: false });
-      }
+      } catch (e) { results.push({ name: domain, ok: false }); }
     }
     showResult(results, 'Deletion queued', 'Some deletions failed.');
   }
 
   /* ══════════════════════════════════════════
-     RESULT SCREEN
+     RESULT
   ══════════════════════════════════════════ */
   function showResult(results, successTitle, failTitle) {
     const allOk    = results.every(r => r.ok);
-    const listHtml = results.map(r => `
-      <div>
-        <span>${esc(r.name)}</span>
-        <span class="${r.ok ? 'status-ok' : 'status-fail'}">${r.ok ? 'done' : 'failed'}</span>
-      </div>
-    `).join('');
-
+    const listHtml = results.map(r => `<div><span>${esc(r.name)}</span><span class="${r.ok ? 'status-ok' : 'status-fail'}">${r.ok ? 'done' : 'failed'}</span></div>`).join('');
     document.getElementById('result-card').innerHTML = `
       <div class="result-icon ${allOk ? 'success' : 'error'}">
         ${allOk
@@ -669,10 +666,7 @@
         }
       </div>
       <h2>${allOk ? successTitle : failTitle}</h2>
-      <p>${allOk
-        ? 'The operation completed successfully.'
-        : 'One or more items could not be processed. Check your Logic App run history for details.'
-      }</p>
+      <p>${allOk ? 'The operation completed successfully.' : 'One or more items could not be processed. Check your Logic App run history for details.'}</p>
       <div class="deleted-list">${listHtml}</div>
       <button class="back-btn" onclick="resetAndBack()">Back</button>
     `;
@@ -680,41 +674,35 @@
   }
 
   function resetAndBack() {
-    selectedSenders.clear();
-    selectedFiles.clear();
+    selectedSenders.clear(); selectedFiles.clear();
     document.querySelectorAll('.item-card').forEach(c => c.classList.remove('selected'));
     document.getElementById('sel-count-num').textContent     = '0';
     document.getElementById('mail-delete-btn').disabled      = true;
     document.getElementById('mail-delete-btn').textContent   = 'Delete from inbox';
-    document.getElementById('od-count-num').textContent      = '0';
-    document.getElementById('od-size-num').textContent       = '0 MB';
-    document.getElementById('od-delete-btn').disabled        = true;
-    document.getElementById('od-delete-btn').textContent     = 'Delete files';
+    document.getElementById('storage-count-num').textContent = '0';
+    document.getElementById('storage-size-num').textContent  = '0 MB';
+    document.getElementById('storage-delete-btn').disabled   = true;
+    document.getElementById('storage-delete-btn').textContent = 'Delete files';
     show('main');
   }
 
   function signOut() {
     if (confirm('Sign out of Mail Cleaner?')) {
-      currentAccount  = null;
-      accessToken     = null;
-      currentProvider = null;
-      selectedSenders.clear();
-      selectedFiles.clear();
-      document.getElementById('onedrive-grid').innerHTML = '';
+      currentAccount = null; accessToken = null; currentProvider = null;
+      selectedSenders.clear(); selectedFiles.clear();
+      document.getElementById('storage-grid').innerHTML = '';
       show('login');
     }
   }
 
-  /* ══════════════════════════════════════════
-     UTILS
-  ══════════════════════════════════════════ */
+  /* ── UTILS ── */
   function formatSize(bytes) {
+    if (!bytes || bytes === 0) return '0 B';
     if (bytes >= 1073741824) return (bytes / 1073741824).toFixed(1) + ' GB';
     if (bytes >= 1048576)    return Math.round(bytes / 1048576) + ' MB';
     if (bytes >= 1024)       return Math.round(bytes / 1024) + ' KB';
     return bytes + ' B';
   }
-
   function esc(s) {
     return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
