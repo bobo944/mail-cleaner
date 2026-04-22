@@ -318,7 +318,7 @@
     setLoading('Opening Google sign-in...');
     const client = google.accounts.oauth2.initTokenClient({
       client_id: GOOGLE_CLIENT_ID,
-      scope: 'https://www.googleapis.com/auth/gmail.modify https://mail.google.com/ https://www.googleapis.com/auth/drive',
+      scope: 'scope: 'https://www.googleapis.com/auth/gmail.modify https://mail.google.com/ https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/drive.file',',
       prompt: 'consent',
       callback: async (response) => {
         if (response.error) { show('login'); alert('Google sign-in failed: ' + response.error); return; }
