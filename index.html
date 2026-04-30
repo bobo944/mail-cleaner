@@ -24,8 +24,7 @@
         --border: rgba(255,255,255,0.10); --border-md: rgba(255,255,255,0.20);
         --text: #e8e6df; --text-sec: #b4b2a9;
         --blue-light: #0C447C; --blue-dark: #B5D4F4;
-        --red-light: #501313; --green-light: #173404;
-        --teal-light: #04342C;
+        --red-light: #501313; --green-light: #173404; --teal-light: #04342C;
       }
     }
     html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.5; }
@@ -43,7 +42,6 @@
     .tab-btn { padding: 12px 16px; font-size: 13px; font-weight: 500; color: var(--text-sec); background: transparent; border: none; border-bottom: 2px solid transparent; cursor: pointer; transition: color .15s, border-color .15s; margin-bottom: -0.5px; white-space: nowrap; flex-shrink: 0; }
     .tab-btn:hover { color: var(--text); }
     .tab-btn.active { color: var(--blue); border-bottom-color: var(--blue); }
-    .tab-btn.ms-only { opacity: 1; }
     .tab-panel { display: none; flex: 1; flex-direction: column; }
     .tab-panel.active { display: flex; flex-direction: column; }
     #screen-login { align-items: center; justify-content: center; padding: 40px 20px; }
@@ -109,9 +107,27 @@
     .quota-fill { height: 100%; border-radius: 4px; }
     .quota-fill.ms { background: var(--blue); }
     .quota-fill.gd { background: #EA4335; }
-    .quota-fill.sp { background: var(--teal); }
     .quota-val { color: var(--text); font-weight: 500; flex-shrink: 0; }
     .info-note { font-size: 13px; color: var(--text-sec); padding: 20px 0; line-height: 1.6; }
+    /* Report tab */
+    .report-panel { display: flex; flex-direction: column; gap: 16px; max-width: 560px; }
+    .report-card { background: var(--bg-card); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 20px 22px; }
+    .report-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+    .report-card p { font-size: 13px; color: var(--text-sec); line-height: 1.6; margin-bottom: 16px; }
+    .report-btn { display: flex; align-items: center; gap: 8px; padding: 10px 20px; background: var(--blue); color: #E6F1FB; border: none; border-radius: var(--radius-md); font-size: 13px; font-weight: 600; cursor: pointer; transition: opacity .15s; }
+    .report-btn:hover { opacity: .88; }
+    .report-btn:disabled { opacity: .4; cursor: not-allowed; }
+    .report-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+    .report-status { margin-top: 12px; font-size: 13px; padding: 10px 14px; border-radius: var(--radius-md); display: none; }
+    .report-status.success { background: var(--green-light); color: var(--green); }
+    .report-status.error { background: var(--red-light); color: var(--red); }
+    .report-status.loading { background: var(--blue-light); color: var(--blue-dark); }
+    .schedule-info { display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: var(--bg-sec); border-radius: var(--radius-md); font-size: 13px; color: var(--text-sec); }
+    .schedule-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
+    .report-preview-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 0.5px solid var(--border); font-size: 13px; }
+    .report-preview-row:last-child { border-bottom: none; }
+    .report-preview-row span { color: var(--text-sec); }
+    /* Result */
     #screen-result { align-items: center; justify-content: center; padding: 40px 20px; }
     .result-card { background: var(--bg-card); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 36px 32px; width: 100%; max-width: 440px; text-align: center; }
     .result-icon { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; }
@@ -134,31 +150,19 @@
 
   <!-- LOGIN -->
   <div class="screen active" id="screen-login">
-    <div class="topbar">
-      <div class="logo"><div class="logo-dot"></div>Mail cleaner</div>
-    </div>
+    <div class="topbar"><div class="logo"><div class="logo-dot"></div>Mail cleaner</div></div>
     <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:40px 20px;">
       <div class="login-card">
         <h1>Clean your inbox</h1>
-        <p>Sign in to delete unwanted emails and clean up your cloud storage — all in one place.</p>
+        <p>Sign in to delete unwanted emails, clean up your cloud storage, and get monthly inbox reports — all in one place.</p>
         <div class="provider-btns">
           <button class="ms-btn" onclick="startMicrosoftLogin()">
-            <svg viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg">
-              <rect x="1"  y="1"  width="9" height="9" fill="#F25022"/>
-              <rect x="11" y="1"  width="9" height="9" fill="#7FBA00"/>
-              <rect x="1"  y="11" width="9" height="9" fill="#00A4EF"/>
-              <rect x="11" y="11" width="9" height="9" fill="#FFB900"/>
-            </svg>
+            <svg viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="9" height="9" fill="#F25022"/><rect x="11" y="1" width="9" height="9" fill="#7FBA00"/><rect x="1" y="11" width="9" height="9" fill="#00A4EF"/><rect x="11" y="11" width="9" height="9" fill="#FFB900"/></svg>
             Sign in with Microsoft
           </button>
           <div class="divider">or</div>
           <button class="google-btn" onclick="startGoogleLogin()">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
-              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-            </svg>
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
             Sign in with Google
           </button>
         </div>
@@ -169,13 +173,8 @@
 
   <!-- LOADING -->
   <div class="screen" id="screen-loading">
-    <div class="topbar">
-      <div class="logo"><div class="logo-dot"></div>Mail cleaner</div>
-    </div>
-    <div class="loading-wrap">
-      <div class="spinner"></div>
-      <p id="loading-msg">Signing you in...</p>
-    </div>
+    <div class="topbar"><div class="logo"><div class="logo-dot"></div>Mail cleaner</div></div>
+    <div class="loading-wrap"><div class="spinner"></div><p id="loading-msg">Signing you in...</p></div>
   </div>
 
   <!-- MAIN -->
@@ -191,7 +190,8 @@
     <div class="tab-nav">
       <button class="tab-btn active" onclick="switchTab('mail')">Inbox cleaner</button>
       <button class="tab-btn" onclick="switchTab('storage')">Storage</button>
-      <button class="tab-btn ms-only" onclick="switchTab('sharepoint')" id="sp-tab-btn">SharePoint</button>
+      <button class="tab-btn" onclick="switchTab('sharepoint')" id="sp-tab-btn">SharePoint</button>
+      <button class="tab-btn" onclick="switchTab('report')">Reports</button>
     </div>
 
     <!-- MAIL TAB -->
@@ -228,31 +228,25 @@
     <!-- SHAREPOINT TAB -->
     <div class="tab-panel" id="tab-sharepoint">
       <div class="main-body">
-        <div id="sp-content">
-          <div id="sp-note" class="info-note" style="display:none;"></div>
-          <div id="sp-site-wrap" style="display:none;">
-            <div class="storage-badge sharepoint">SharePoint</div>
-            <div class="site-selector">
-              <label>Select a SharePoint site</label>
-              <select id="sp-site-select" onchange="loadSharePointLibraries()">
-                <option value="">Loading sites...</option>
-              </select>
-            </div>
-            <div id="sp-lib-wrap" style="display:none;">
-              <div class="site-selector">
-                <label>Select a document library</label>
-                <select id="sp-lib-select" onchange="loadSharePointFiles()">
-                  <option value="">Select a library...</option>
-                </select>
-              </div>
-            </div>
-            <div id="sp-size-section" style="display:none;">
-              <div class="section-label">Files by type</div>
-              <div class="size-bar-wrap" id="sp-size-bars"></div>
-            </div>
-            <div class="section-label" id="sp-files-label" style="display:none;">Files — select to delete</div>
-            <div class="card-grid" id="sp-grid"></div>
+        <div id="sp-note" class="info-note" style="display:none;"></div>
+        <div id="sp-site-wrap" style="display:none;">
+          <div class="storage-badge sharepoint">SharePoint</div>
+          <div class="site-selector">
+            <label>Select a SharePoint site</label>
+            <select id="sp-site-select" onchange="loadSharePointLibraries()"><option value="">Loading sites...</option></select>
           </div>
+          <div id="sp-lib-wrap" style="display:none;">
+            <div class="site-selector">
+              <label>Select a document library</label>
+              <select id="sp-lib-select" onchange="loadSharePointFiles()"><option value="">Select a library...</option></select>
+            </div>
+          </div>
+          <div id="sp-size-section" style="display:none;">
+            <div class="section-label">Files by type</div>
+            <div class="size-bar-wrap" id="sp-size-bars"></div>
+          </div>
+          <div class="section-label" id="sp-files-label" style="display:none;">Files — select to delete</div>
+          <div class="card-grid" id="sp-grid"></div>
         </div>
       </div>
       <div class="action-bar">
@@ -260,13 +254,45 @@
         <button class="delete-btn" id="sp-delete-btn" disabled onclick="runSharePointDeletion()">Delete files</button>
       </div>
     </div>
+
+    <!-- REPORT TAB -->
+    <div class="tab-panel" id="tab-report">
+      <div class="main-body">
+        <div class="report-panel">
+          <div class="report-card">
+            <h3>Generate inbox report</h3>
+            <p>Analyse your inbox and receive a detailed report directly to your email — top senders, email volume, attachment count, and a summary of what Mail Cleaner has cleaned up for you.</p>
+            <button class="report-btn" id="report-btn" onclick="generateReport()">
+              <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 2v10m0 0l-3-3m3 3l3-3M4 14v2a2 2 0 002 2h8a2 2 0 002-2v-2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Send report to my inbox
+            </button>
+            <div class="report-status" id="report-status"></div>
+          </div>
+          <div class="report-card">
+            <h3>Automatic monthly report</h3>
+            <p>A report is automatically sent to your inbox on the 1st of every month once you have set up the scheduled Logic App — no action needed after that.</p>
+            <div class="schedule-info">
+              <div class="schedule-dot"></div>
+              <span>Scheduled: 1st of each month at 08:00</span>
+            </div>
+          </div>
+          <div class="report-card">
+            <h3>What the report contains</h3>
+            <div>
+              <div class="report-preview-row"><strong>Total emails scanned</strong><span>last 250 emails</span></div>
+              <div class="report-preview-row"><strong>Emails with attachments</strong><span>count</span></div>
+              <div class="report-preview-row"><strong>Senders deleted by Mail Cleaner</strong><span>from your rules</span></div>
+              <div class="report-preview-row"><strong>Sent to</strong><span>your signed-in email</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- RESULT -->
   <div class="screen" id="screen-result">
-    <div class="topbar">
-      <div class="logo"><div class="logo-dot"></div>Mail cleaner</div>
-    </div>
+    <div class="topbar"><div class="logo"><div class="logo-dot"></div>Mail cleaner</div></div>
     <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:40px 20px;">
       <div class="result-card" id="result-card"></div>
     </div>
@@ -281,28 +307,17 @@
   const ONEDRIVE_LOGIC_APP = 'https://prod-20.germanywestcentral.logic.azure.com:443/workflows/eb8954be5cc14a46944947d8e9a75ffe/triggers/When_an_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_an_HTTP_request_is_received%2Frun&sv=1.0&sig=7qw-NafSDOzKuobe_Pt0k5j1t7TVC963pePDuc0PESc';
   const GDRIVE_LOGIC_APP   = 'https://prod-07.germanywestcentral.logic.azure.com:443/workflows/3861886e77384a1c98d8da182c33a4b9/triggers/When_an_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_an_HTTP_request_is_received%2Frun&sv=1.0&sig=IkFwViw13TyOSGiWgoF78CT78VqntPigV12mV10w8Qo';
   const SP_LOGIC_APP       = 'https://prod-05.germanywestcentral.logic.azure.com:443/workflows/0467fff8b2a5438b9dfca63995e744b7/triggers/When_an_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_an_HTTP_request_is_received%2Frun&sv=1.0&sig=s3kGbIk49ATrpbl9rIn05-pqqeCJ5LMnBu_3ZNVhhE4';
+  const REPORT_LOGIC_APP   = 'https://prod-05.germanywestcentral.logic.azure.com:443/workflows/b85f14a16571488f84ceae70193d1e4a/triggers/When_an_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_an_HTTP_request_is_received%2Frun&sv=1.0&sig=YrFfBI0tFTG88QldMswWcgFveFnUVOvW992buR3fs2k';
   const MS_SCOPES          = ['User.Read', 'Mail.Read', 'Mail.ReadWrite', 'Files.ReadWrite', 'Sites.ReadWrite.All'];
 
   /* ─── STATE ─── */
-  let msalInstance    = null;
-  let currentAccount  = null;
-  let accessToken     = null;
-  let currentProvider = null;
-  let selectedSenders = new Set();
-  let selectedFiles   = new Map();
-  let selectedSPFiles = new Map();
-  let currentSiteId   = null;
-  let currentDriveId  = null;
+  let msalInstance = null, currentAccount = null, accessToken = null;
+  let currentProvider = null, userEmail = null, currentSiteId = null;
+  let selectedSenders = new Set(), selectedFiles = new Map(), selectedSPFiles = new Map();
 
   /* ─── HELPERS ─── */
-  function show(id) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById('screen-' + id).classList.add('active');
-  }
-  function setLoading(msg) {
-    show('loading');
-    document.getElementById('loading-msg').textContent = msg;
-  }
+  function show(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById('screen-' + id).classList.add('active'); }
+  function setLoading(msg) { show('loading'); document.getElementById('loading-msg').textContent = msg; }
   function switchTab(tab) {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
@@ -312,92 +327,62 @@
     if (tab === 'sharepoint' && document.getElementById('sp-grid').children.length === 0) loadSharePointSites();
   }
 
-  /* ══════════════════════════════════════════
-     MICROSOFT LOGIN
-  ══════════════════════════════════════════ */
+  /* ══════════ MICROSOFT LOGIN ══════════ */
   async function startMicrosoftLogin() {
     try {
-      const config = {
-        auth: { clientId: MS_CLIENT_ID, authority: 'https://login.microsoftonline.com/common', redirectUri: window.location.origin + window.location.pathname },
-        cache: { cacheLocation: 'sessionStorage' }
-      };
-      msalInstance = new msal.PublicClientApplication(config);
+      msalInstance = new msal.PublicClientApplication({ auth: { clientId: MS_CLIENT_ID, authority: 'https://login.microsoftonline.com/common', redirectUri: window.location.origin + window.location.pathname }, cache: { cacheLocation: 'sessionStorage' } });
       await msalInstance.initialize();
       setLoading('Opening Microsoft sign-in...');
-      const result    = await msalInstance.loginPopup({ scopes: MS_SCOPES });
-      currentAccount  = result.account;
-      accessToken     = result.accessToken;
-      currentProvider = 'microsoft';
+      const result = await msalInstance.loginPopup({ scopes: MS_SCOPES });
+      currentAccount = result.account; accessToken = result.accessToken; currentProvider = 'microsoft'; userEmail = result.account.username || '';
       await loadMicrosoftSenders();
-    } catch (e) {
-      show('login');
-      if (e.errorCode !== 'user_cancelled') alert('Sign-in failed: ' + (e.message || e));
-    }
+    } catch (e) { show('login'); if (e.errorCode !== 'user_cancelled') alert('Sign-in failed: ' + (e.message || e)); }
   }
-
   async function getMicrosoftToken() {
-    try {
-      const r = await msalInstance.acquireTokenSilent({ scopes: MS_SCOPES, account: currentAccount });
-      return r.accessToken;
-    } catch {
-      const r = await msalInstance.acquireTokenPopup({ scopes: MS_SCOPES });
-      return r.accessToken;
-    }
+    try { const r = await msalInstance.acquireTokenSilent({ scopes: MS_SCOPES, account: currentAccount }); return r.accessToken; }
+    catch { const r = await msalInstance.acquireTokenPopup({ scopes: MS_SCOPES }); return r.accessToken; }
   }
-
   async function loadMicrosoftSenders() {
     setLoading('Scanning your inbox...');
     try {
-      const token = await getMicrosoftToken();
-      accessToken  = token;
-      const res    = await fetch('https://graph.microsoft.com/v1.0/me/messages?$select=from&$top=250&$orderby=receivedDateTime desc', { headers: { Authorization: 'Bearer ' + token } });
-      const data   = await res.json();
+      accessToken = await getMicrosoftToken();
+      const res = await fetch('https://graph.microsoft.com/v1.0/me/messages?$select=from&$top=250&$orderby=receivedDateTime desc', { headers: { Authorization: 'Bearer ' + accessToken } });
+      const data = await res.json();
       if (!data.value) throw new Error(data.error?.message || 'Could not read inbox.');
-      const senders = groupSenders(data.value.map(m => ({ address: m.from?.emailAddress?.address || '', name: m.from?.emailAddress?.name || '' })));
-      setUserUI(currentAccount.username || '', 'microsoft');
-      renderSenders(senders);
+      setUserUI(userEmail, 'microsoft');
+      renderSenders(groupSenders(data.value.map(m => ({ address: m.from?.emailAddress?.address || '', name: m.from?.emailAddress?.name || '' }))));
       show('main');
     } catch (e) { show('login'); alert('Could not load inbox: ' + (e.message || e)); }
   }
 
-  /* ══════════════════════════════════════════
-     GOOGLE LOGIN
-  ══════════════════════════════════════════ */
+  /* ══════════ GOOGLE LOGIN ══════════ */
   function startGoogleLogin() {
     setLoading('Opening Google sign-in...');
-    const client = google.accounts.oauth2.initTokenClient({
+    google.accounts.oauth2.initTokenClient({
       client_id: GOOGLE_CLIENT_ID,
       scope: 'https://www.googleapis.com/auth/gmail.modify https://mail.google.com/ https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/drive.file',
       prompt: 'consent',
       callback: async (response) => {
         if (response.error) { show('login'); alert('Google sign-in failed: ' + response.error); return; }
-        accessToken     = response.access_token;
-        currentProvider = 'google';
+        accessToken = response.access_token; currentProvider = 'google';
         await loadGoogleSenders();
       }
-    });
-    client.requestAccessToken();
+    }).requestAccessToken();
   }
-
   async function loadGoogleSenders() {
     setLoading('Scanning your Gmail inbox...');
     try {
-      const profileRes = await fetch('https://www.googleapis.com/gmail/v1/users/me/profile', { headers: { Authorization: 'Bearer ' + accessToken } });
-      const profile    = await profileRes.json();
-      const email      = profile.emailAddress || 'Gmail user';
-      const listRes    = await fetch('https://www.googleapis.com/gmail/v1/users/me/messages?maxResults=200&labelIds=INBOX', { headers: { Authorization: 'Bearer ' + accessToken } });
-      const listData   = await listRes.json();
+      const profile = await (await fetch('https://www.googleapis.com/gmail/v1/users/me/profile', { headers: { Authorization: 'Bearer ' + accessToken } })).json();
+      userEmail = profile.emailAddress || 'Gmail user';
+      const listData = await (await fetch('https://www.googleapis.com/gmail/v1/users/me/messages?maxResults=200&labelIds=INBOX', { headers: { Authorization: 'Bearer ' + accessToken } })).json();
       if (!listData.messages) throw new Error('Could not read Gmail inbox.');
       setLoading('Reading senders (' + listData.messages.length + ' emails)...');
       const senderMap = {};
-      const batchSize = 20;
-      for (let i = 0; i < Math.min(listData.messages.length, 200); i += batchSize) {
-        const batch = listData.messages.slice(i, i + batchSize);
-        await Promise.all(batch.map(async (msg) => {
-          const r = await fetch(`https://www.googleapis.com/gmail/v1/users/me/messages/${msg.id}?format=metadata&metadataHeaders=From`, { headers: { Authorization: 'Bearer ' + accessToken } });
-          const d = await r.json();
+      for (let i = 0; i < Math.min(listData.messages.length, 200); i += 20) {
+        await Promise.all(listData.messages.slice(i, i + 20).map(async (msg) => {
+          const d = await (await fetch(`https://www.googleapis.com/gmail/v1/users/me/messages/${msg.id}?format=metadata&metadataHeaders=From`, { headers: { Authorization: 'Bearer ' + accessToken } })).json();
           const fromHeader = d.payload?.headers?.find(h => h.name === 'From')?.value || '';
-          const parsed     = parseFromHeader(fromHeader);
+          const parsed = parseFromHeader(fromHeader);
           if (!parsed.address) return;
           const domain = parsed.address.split('@')[1]?.toLowerCase();
           if (!domain) return;
@@ -405,476 +390,266 @@
           senderMap[domain].count++;
         }));
       }
-      const senders = Object.values(senderMap).sort((a, b) => b.count - a.count);
-      setUserUI(email, 'google');
-      renderSenders(senders);
-      // Dim SharePoint tab for Google users
+      setUserUI(userEmail, 'google');
+      renderSenders(Object.values(senderMap).sort((a, b) => b.count - a.count));
       document.getElementById('sp-tab-btn').style.opacity = '0.4';
       show('main');
     } catch (e) { show('login'); alert('Could not load Gmail: ' + (e.message || e)); }
   }
-
   function parseFromHeader(header) {
     const match = header.match(/^(.*?)\s*<([^>]+)>$/);
-    if (match) return { name: match[1].replace(/"/g, '').trim(), address: match[2].trim() };
-    return { name: '', address: header.trim() };
+    return match ? { name: match[1].replace(/"/g, '').trim(), address: match[2].trim() } : { name: '', address: header.trim() };
   }
 
-  /* ══════════════════════════════════════════
-     SHAREPOINT TAB
-  ══════════════════════════════════════════ */
-  async function loadSharePointSites() {
-    const note    = document.getElementById('sp-note');
-    const siteWrap = document.getElementById('sp-site-wrap');
-
-    if (currentProvider !== 'microsoft') {
-      note.style.display = 'block';
-      note.textContent   = 'SharePoint is only available for Microsoft accounts. Sign in with Microsoft to use this feature.';
-      return;
+  /* ══════════ REPORT TAB ══════════ */
+  async function generateReport() {
+    const btn = document.getElementById('report-btn');
+    const status = document.getElementById('report-status');
+    btn.disabled = true;
+    btn.textContent = 'Generating...';
+    status.className = 'report-status loading';
+    status.style.display = 'block';
+    status.textContent = 'Contacting Logic App — this may take a moment...';
+    const userId = currentAccount?.localAccountId || currentAccount?.homeAccountId || btoa(userEmail || 'user').replace(/=/g, '');
+    try {
+      const resp = await fetch(REPORT_LOGIC_APP, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, userEmail, accessToken, provider: currentProvider, month: new Date().toISOString().slice(0, 7) })
+      });
+      if (resp.ok || resp.status === 202) {
+        status.className = 'report-status success';
+        status.textContent = '✓ Report generated — check your inbox shortly.';
+      } else { throw new Error('Status ' + resp.status); }
+    } catch (e) {
+      status.className = 'report-status error';
+      status.textContent = 'Could not generate report. Check your Logic App run history for details.';
     }
+    btn.disabled = false;
+    btn.innerHTML = '<svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 2v10m0 0l-3-3m3 3l3-3M4 14v2a2 2 0 002 2h8a2 2 0 002-2v-2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Send report to my inbox';
+  }
 
+  /* ══════════ SHAREPOINT TAB ══════════ */
+  async function loadSharePointSites() {
+    const note = document.getElementById('sp-note'), siteWrap = document.getElementById('sp-site-wrap');
+    if (currentProvider !== 'microsoft') { note.style.display = 'block'; note.textContent = 'SharePoint is only available for Microsoft accounts.'; return; }
     siteWrap.style.display = 'block';
     const select = document.getElementById('sp-site-select');
     select.innerHTML = '<option value="">Loading sites...</option>';
-
     try {
-      const token = await getMicrosoftToken();
-      accessToken  = token;
-
-      const res  = await fetch('https://graph.microsoft.com/v1.0/sites?search=*&$select=id,displayName,webUrl&$top=50', {
-        headers: { Authorization: 'Bearer ' + token }
-      });
-      const data = await res.json();
-
-      if (!data.value || data.value.length === 0) {
-        select.innerHTML = '<option value="">No SharePoint sites found</option>';
-        note.style.display = 'block';
-        note.textContent   = 'No SharePoint sites were found. SharePoint requires a Microsoft 365 work or school account.';
-        return;
-      }
-
+      const token = await getMicrosoftToken(); accessToken = token;
+      const data = await (await fetch('https://graph.microsoft.com/v1.0/sites?search=*&$select=id,displayName,webUrl&$top=50', { headers: { Authorization: 'Bearer ' + token } })).json();
+      if (!data.value?.length) { select.innerHTML = '<option value="">No SharePoint sites found</option>'; note.style.display = 'block'; note.textContent = 'No SharePoint sites found. This feature requires a Microsoft 365 work or school account.'; return; }
       select.innerHTML = '<option value="">Select a site...</option>';
-      for (const site of data.value) {
-        const opt   = document.createElement('option');
-        opt.value   = site.id;
-        opt.textContent = site.displayName || site.webUrl;
-        select.appendChild(opt);
-      }
-    } catch (e) {
-      select.innerHTML = '<option value="">Could not load sites</option>';
-      note.style.display = 'block';
-      note.textContent   = 'Could not load SharePoint sites. This feature requires a Microsoft 365 work or school account — personal Outlook/Hotmail accounts do not have SharePoint.';
-    }
+      data.value.forEach(site => { const o = document.createElement('option'); o.value = site.id; o.textContent = site.displayName || site.webUrl; select.appendChild(o); });
+    } catch (e) { select.innerHTML = '<option value="">Could not load sites</option>'; note.style.display = 'block'; note.textContent = 'Could not load SharePoint sites. This feature requires a Microsoft 365 work or school account.'; }
   }
-
   async function loadSharePointLibraries() {
-    const siteId = document.getElementById('sp-site-select').value;
-    if (!siteId) return;
+    const siteId = document.getElementById('sp-site-select').value; if (!siteId) return;
     currentSiteId = siteId;
-
-    const libWrap = document.getElementById('sp-lib-wrap');
-    const libSel  = document.getElementById('sp-lib-select');
-    libWrap.style.display = 'block';
-    libSel.innerHTML = '<option value="">Loading libraries...</option>';
-
-    // Reset file area
-    document.getElementById('sp-grid').innerHTML = '';
-    document.getElementById('sp-files-label').style.display  = 'none';
-    document.getElementById('sp-size-section').style.display = 'none';
-    selectedSPFiles.clear();
-    updateSPActionBar();
-
+    const libWrap = document.getElementById('sp-lib-wrap'), libSel = document.getElementById('sp-lib-select');
+    libWrap.style.display = 'block'; libSel.innerHTML = '<option value="">Loading libraries...</option>';
+    document.getElementById('sp-grid').innerHTML = ''; document.getElementById('sp-files-label').style.display = 'none'; document.getElementById('sp-size-section').style.display = 'none';
+    selectedSPFiles.clear(); updateSPActionBar();
     try {
       const token = await getMicrosoftToken();
-      const res   = await fetch(`https://graph.microsoft.com/v1.0/sites/${siteId}/drives?$select=id,name`, {
-        headers: { Authorization: 'Bearer ' + token }
-      });
-      const data = await res.json();
-
+      const data = await (await fetch(`https://graph.microsoft.com/v1.0/sites/${siteId}/drives?$select=id,name`, { headers: { Authorization: 'Bearer ' + token } })).json();
       libSel.innerHTML = '<option value="">Select a library...</option>';
-      for (const drive of (data.value || [])) {
-        const opt   = document.createElement('option');
-        opt.value   = drive.id;
-        opt.textContent = drive.name;
-        libSel.appendChild(opt);
-      }
-    } catch (e) {
-      libSel.innerHTML = '<option value="">Could not load libraries</option>';
-    }
+      (data.value || []).forEach(drive => { const o = document.createElement('option'); o.value = drive.id; o.textContent = drive.name; libSel.appendChild(o); });
+    } catch (e) { libSel.innerHTML = '<option value="">Could not load libraries</option>'; }
   }
-
   async function loadSharePointFiles() {
-    const driveId = document.getElementById('sp-lib-select').value;
-    if (!driveId) return;
-    currentDriveId = driveId;
-
+    const driveId = document.getElementById('sp-lib-select').value; if (!driveId) return;
     const grid = document.getElementById('sp-grid');
     grid.innerHTML = '<div class="empty-state">Loading files...</div>';
-    document.getElementById('sp-files-label').style.display  = 'none';
-    document.getElementById('sp-size-section').style.display = 'none';
-    selectedSPFiles.clear();
-    updateSPActionBar();
-
+    document.getElementById('sp-files-label').style.display = 'none'; document.getElementById('sp-size-section').style.display = 'none';
+    selectedSPFiles.clear(); updateSPActionBar();
     try {
-      const token = await getMicrosoftToken();
-      const files = [];
+      const token = await getMicrosoftToken(); const files = [];
       await scanSPFolder(currentSiteId, driveId, 'root', '', token, files);
-
-      if (!files.length) {
-        grid.innerHTML = '<div class="empty-state">No files found in this library.</div>';
-        return;
-      }
-
-      files.sort((a, b) => b.size - a.size);
-      renderSPSizeBars(files);
-      renderSPFiles(files);
-      document.getElementById('sp-files-label').style.display  = 'block';
-      document.getElementById('sp-size-section').style.display = 'block';
-    } catch (e) {
-      grid.innerHTML = `<div class="empty-state">Could not load files: ${esc(e.message)}</div>`;
-    }
+      if (!files.length) { grid.innerHTML = '<div class="empty-state">No files found in this library.</div>'; return; }
+      files.sort((a, b) => b.size - a.size); renderSPSizeBars(files); renderSPFiles(files);
+      document.getElementById('sp-files-label').style.display = 'block'; document.getElementById('sp-size-section').style.display = 'block';
+    } catch (e) { grid.innerHTML = `<div class="empty-state">Could not load files: ${esc(e.message)}</div>`; }
   }
-
   async function scanSPFolder(siteId, driveId, folderId, path, token, files) {
-    const url = folderId === 'root'
-      ? `https://graph.microsoft.com/v1.0/sites/${siteId}/drives/${driveId}/root/children?$select=id,name,size,file,folder,lastModifiedDateTime&$top=100`
-      : `https://graph.microsoft.com/v1.0/sites/${siteId}/drives/${driveId}/items/${folderId}/children?$select=id,name,size,file,folder,lastModifiedDateTime&$top=100`;
-
-    const res  = await fetch(url, { headers: { Authorization: 'Bearer ' + token } });
-    const data = await res.json();
+    const url = folderId === 'root' ? `https://graph.microsoft.com/v1.0/sites/${siteId}/drives/${driveId}/root/children?$select=id,name,size,file,folder,lastModifiedDateTime&$top=100` : `https://graph.microsoft.com/v1.0/sites/${siteId}/drives/${driveId}/items/${folderId}/children?$select=id,name,size,file,folder,lastModifiedDateTime&$top=100`;
+    const data = await (await fetch(url, { headers: { Authorization: 'Bearer ' + token } })).json();
     if (!data.value) return;
-
     for (const item of data.value) {
-      if (item.file) {
-        files.push({
-          id:       item.id,
-          name:     item.name,
-          size:     item.size || 0,
-          modified: item.lastModifiedDateTime,
-          ext:      item.name.includes('.') ? item.name.split('.').pop().toLowerCase() : 'other',
-          path:     path ? path + '/' + item.name : item.name,
-          siteId,
-          driveId
-        });
-      } else if (item.folder && files.length < 300) {
-        await scanSPFolder(siteId, driveId, item.id, path ? path + '/' + item.name : item.name, token, files);
-      }
+      if (item.file) files.push({ id: item.id, name: item.name, size: item.size || 0, modified: item.lastModifiedDateTime, ext: item.name.includes('.') ? item.name.split('.').pop().toLowerCase() : 'other', path: path ? path + '/' + item.name : item.name, siteId, driveId });
+      else if (item.folder && files.length < 300) await scanSPFolder(siteId, driveId, item.id, path ? path + '/' + item.name : item.name, token, files);
     }
   }
-
   function renderSPSizeBars(files) {
-    const typeMap = {};
-    for (const f of files) { if (!typeMap[f.ext]) typeMap[f.ext] = 0; typeMap[f.ext] += f.size; }
-    const sorted = Object.entries(typeMap).sort((a, b) => b[1] - a[1]).slice(0, 6);
-    const max    = sorted[0]?.[1] || 1;
-    document.getElementById('sp-size-bars').innerHTML = sorted.map(([ext, size]) => `
-      <div class="size-bar-row">
-        <div class="size-bar-label">.${esc(ext)}</div>
-        <div class="size-bar-track"><div class="size-bar-fill sp" style="width:${Math.round(size/max*100)}%"></div></div>
-        <div class="size-bar-val">${formatSize(size)}</div>
-      </div>
-    `).join('');
+    const typeMap = {}; files.forEach(f => { if (!typeMap[f.ext]) typeMap[f.ext] = 0; typeMap[f.ext] += f.size; });
+    const sorted = Object.entries(typeMap).sort((a, b) => b[1] - a[1]).slice(0, 6); const max = sorted[0]?.[1] || 1;
+    document.getElementById('sp-size-bars').innerHTML = sorted.map(([ext, size]) => `<div class="size-bar-row"><div class="size-bar-label">.${esc(ext)}</div><div class="size-bar-track"><div class="size-bar-fill sp" style="width:${Math.round(size/max*100)}%"></div></div><div class="size-bar-val">${formatSize(size)}</div></div>`).join('');
   }
-
   function renderSPFiles(files) {
-    const grid = document.getElementById('sp-grid');
-    grid.innerHTML = '';
-    for (const f of files) {
-      const card     = document.createElement('div');
-      card.className = 'item-card';
+    const grid = document.getElementById('sp-grid'); grid.innerHTML = '';
+    files.forEach(f => {
+      const card = document.createElement('div'); card.className = 'item-card';
       const modified = f.modified ? new Date(f.modified).toLocaleDateString() : '';
-      card.innerHTML = `
-        <div class="item-name">${esc(f.name)}</div>
-        <div class="item-sub">${esc(f.path.includes('/') ? f.path.substring(0, f.path.lastIndexOf('/')) : 'Root')}</div>
-        <div class="item-meta"><span class="meta-dot"></span>${formatSize(f.size)}${modified ? ' · ' + modified : ''}</div>
-      `;
-      card.addEventListener('click', () => toggleSPFile(card, f));
-      grid.appendChild(card);
-    }
+      card.innerHTML = `<div class="item-name">${esc(f.name)}</div><div class="item-sub">${esc(f.path.includes('/') ? f.path.substring(0, f.path.lastIndexOf('/')) : 'Root')}</div><div class="item-meta"><span class="meta-dot"></span>${formatSize(f.size)}${modified ? ' · ' + modified : ''}</div>`;
+      card.addEventListener('click', () => toggleSPFile(card, f)); grid.appendChild(card);
+    });
   }
-
   function toggleSPFile(card, file) {
     if (selectedSPFiles.has(file.id)) { selectedSPFiles.delete(file.id); card.classList.remove('selected'); }
     else { selectedSPFiles.set(file.id, file); card.classList.add('selected'); }
     updateSPActionBar();
   }
-
   function updateSPActionBar() {
-    const n     = selectedSPFiles.size;
-    const bytes = Array.from(selectedSPFiles.values()).reduce((s, f) => s + f.size, 0);
-    document.getElementById('sp-count-num').textContent = n;
-    document.getElementById('sp-size-num').textContent  = formatSize(bytes);
-    document.getElementById('sp-delete-btn').disabled   = n === 0;
+    const n = selectedSPFiles.size, bytes = Array.from(selectedSPFiles.values()).reduce((s, f) => s + f.size, 0);
+    document.getElementById('sp-count-num').textContent = n; document.getElementById('sp-size-num').textContent = formatSize(bytes); document.getElementById('sp-delete-btn').disabled = n === 0;
   }
-
   async function runSharePointDeletion() {
     if (!selectedSPFiles.size) return;
-    const btn = document.getElementById('sp-delete-btn');
-    btn.disabled    = true;
-    btn.textContent = 'Deleting...';
-    const results   = [];
-
+    const btn = document.getElementById('sp-delete-btn'); btn.disabled = true; btn.textContent = 'Deleting...';
+    const results = [];
     for (const [itemId, file] of selectedSPFiles) {
-      try {
-        const resp = await fetch(SP_LOGIC_APP, {
-          method:  'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body:    JSON.stringify({ siteId: file.siteId, itemId, accessToken })
-        });
-        results.push({ name: file.name, ok: resp.ok || resp.status === 202 });
-      } catch (e) { results.push({ name: file.name, ok: false }); }
+      try { const resp = await fetch(SP_LOGIC_APP, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ siteId: file.siteId, itemId, accessToken }) }); results.push({ name: file.name, ok: resp.ok || resp.status === 202 }); }
+      catch (e) { results.push({ name: file.name, ok: false }); }
     }
     showResult(results, 'Files deleted from SharePoint', 'Some files could not be deleted.');
   }
 
-  /* ══════════════════════════════════════════
-     STORAGE TAB
-  ══════════════════════════════════════════ */
-  async function loadStorage() {
-    if (currentProvider === 'microsoft') await loadOneDrive();
-    else await loadGoogleDrive();
-  }
-
+  /* ══════════ STORAGE TAB ══════════ */
+  async function loadStorage() { if (currentProvider === 'microsoft') await loadOneDrive(); else await loadGoogleDrive(); }
   async function loadOneDrive() {
-    const grid = document.getElementById('storage-grid');
-    grid.innerHTML = '<div class="empty-state">Scanning OneDrive...</div>';
-    resetStorageUI();
+    const grid = document.getElementById('storage-grid'); grid.innerHTML = '<div class="empty-state">Scanning OneDrive...</div>'; resetStorageUI();
     document.getElementById('storage-badge-wrap').innerHTML = '<span class="storage-badge onedrive">OneDrive</span>';
     try {
-      const token = await getMicrosoftToken();
-      accessToken  = token;
-      const driveRes  = await fetch('https://graph.microsoft.com/v1.0/me/drive', { headers: { Authorization: 'Bearer ' + token } });
-      const driveData = await driveRes.json();
+      accessToken = await getMicrosoftToken();
+      const driveData = await (await fetch('https://graph.microsoft.com/v1.0/me/drive', { headers: { Authorization: 'Bearer ' + accessToken } })).json();
       if (driveData.quota) renderQuota(driveData.quota.used || 0, driveData.quota.total || 1, 'ms');
-      const files = [];
-      await scanOneDriveFolder('root', '', token, files);
+      const files = []; await scanOneDriveFolder('root', '', accessToken, files);
       if (!files.length) { grid.innerHTML = '<div class="empty-state">No files found in OneDrive.</div>'; return; }
-      files.sort((a, b) => b.size - a.size);
-      renderSizeBars(files, 'ms');
-      renderStorageFiles(files);
-      document.getElementById('storage-files-label').style.display  = 'block';
-      document.getElementById('storage-size-section').style.display = 'block';
+      files.sort((a, b) => b.size - a.size); renderSizeBars(files, 'ms'); renderStorageFiles(files);
+      document.getElementById('storage-files-label').style.display = 'block'; document.getElementById('storage-size-section').style.display = 'block';
     } catch (e) { grid.innerHTML = `<div class="empty-state">Could not load OneDrive: ${esc(e.message)}</div>`; }
   }
-
   async function scanOneDriveFolder(folderId, path, token, files) {
-    const url = folderId === 'root'
-      ? 'https://graph.microsoft.com/v1.0/me/drive/root/children?$select=id,name,size,file,folder,lastModifiedDateTime&$top=100'
-      : `https://graph.microsoft.com/v1.0/me/drive/items/${folderId}/children?$select=id,name,size,file,folder,lastModifiedDateTime&$top=100`;
-    const res  = await fetch(url, { headers: { Authorization: 'Bearer ' + token } });
-    const data = await res.json();
+    const url = folderId === 'root' ? 'https://graph.microsoft.com/v1.0/me/drive/root/children?$select=id,name,size,file,folder,lastModifiedDateTime&$top=100' : `https://graph.microsoft.com/v1.0/me/drive/items/${folderId}/children?$select=id,name,size,file,folder,lastModifiedDateTime&$top=100`;
+    const data = await (await fetch(url, { headers: { Authorization: 'Bearer ' + token } })).json();
     if (!data.value) return;
     for (const item of data.value) {
       if (item.file) files.push({ id: item.id, name: item.name, size: item.size || 0, modified: item.lastModifiedDateTime, ext: item.name.includes('.') ? item.name.split('.').pop().toLowerCase() : 'other', path: path ? path + '/' + item.name : item.name, provider: 'microsoft' });
       else if (item.folder && files.length < 300) await scanOneDriveFolder(item.id, path ? path + '/' + item.name : item.name, token, files);
     }
   }
-
   async function loadGoogleDrive() {
-    const grid = document.getElementById('storage-grid');
-    grid.innerHTML = '<div class="empty-state">Scanning Google Drive...</div>';
-    resetStorageUI();
+    const grid = document.getElementById('storage-grid'); grid.innerHTML = '<div class="empty-state">Scanning Google Drive...</div>'; resetStorageUI();
     document.getElementById('storage-badge-wrap').innerHTML = '<span class="storage-badge gdrive">Google Drive</span>';
     try {
-      const aboutRes  = await fetch('https://www.googleapis.com/drive/v3/about?fields=storageQuota', { headers: { Authorization: 'Bearer ' + accessToken } });
-      const aboutData = await aboutRes.json();
+      const aboutData = await (await fetch('https://www.googleapis.com/drive/v3/about?fields=storageQuota', { headers: { Authorization: 'Bearer ' + accessToken } })).json();
       if (aboutData.storageQuota) renderQuota(parseInt(aboutData.storageQuota.usageInDrive || 0), parseInt(aboutData.storageQuota.limit || 1), 'gd');
-      const files = [];
-      let pageToken = null;
+      const files = []; let pageToken = null;
       do {
-        const url = 'https://www.googleapis.com/drive/v3/files?pageSize=100&fields=nextPageToken,files(id,name,size,mimeType,modifiedTime,parents)&orderBy=quotaBytesUsed desc' + (pageToken ? '&pageToken=' + pageToken : '');
-        const res  = await fetch(url, { headers: { Authorization: 'Bearer ' + accessToken } });
-        const data = await res.json();
+        const data = await (await fetch('https://www.googleapis.com/drive/v3/files?pageSize=100&fields=nextPageToken,files(id,name,size,mimeType,modifiedTime)&orderBy=quotaBytesUsed desc' + (pageToken ? '&pageToken=' + pageToken : ''), { headers: { Authorization: 'Bearer ' + accessToken } })).json();
         if (!data.files) break;
-        for (const f of data.files) {
-          if (f.mimeType === 'application/vnd.google-apps.folder') continue;
-          const ext = f.name.includes('.') ? f.name.split('.').pop().toLowerCase() : detectGDriveExt(f.mimeType);
-          files.push({ id: f.id, name: f.name, size: parseInt(f.size || 0), modified: f.modifiedTime, ext, path: f.name, provider: 'google' });
-        }
+        data.files.forEach(f => { if (f.mimeType === 'application/vnd.google-apps.folder') return; const ext = f.name.includes('.') ? f.name.split('.').pop().toLowerCase() : detectGDriveExt(f.mimeType); files.push({ id: f.id, name: f.name, size: parseInt(f.size || 0), modified: f.modifiedTime, ext, path: f.name, provider: 'google' }); });
         pageToken = data.nextPageToken;
       } while (pageToken && files.length < 300);
       if (!files.length) { grid.innerHTML = '<div class="empty-state">No files found in Google Drive.</div>'; return; }
-      files.sort((a, b) => b.size - a.size);
-      renderSizeBars(files, 'gd');
-      renderStorageFiles(files);
-      document.getElementById('storage-files-label').style.display  = 'block';
-      document.getElementById('storage-size-section').style.display = 'block';
+      files.sort((a, b) => b.size - a.size); renderSizeBars(files, 'gd'); renderStorageFiles(files);
+      document.getElementById('storage-files-label').style.display = 'block'; document.getElementById('storage-size-section').style.display = 'block';
     } catch (e) { grid.innerHTML = `<div class="empty-state">Could not load Google Drive: ${esc(e.message)}</div>`; }
   }
-
   function detectGDriveExt(mimeType) {
-    const map = { 'application/vnd.google-apps.document': 'gdoc', 'application/vnd.google-apps.spreadsheet': 'gsheet', 'application/vnd.google-apps.presentation': 'gslides', 'application/vnd.google-apps.form': 'gform', 'video/': 'video', 'image/': 'image', 'audio/': 'audio' };
-    for (const [k, v] of Object.entries(map)) { if (mimeType.startsWith(k)) return v; }
-    return 'other';
+    const map = { 'application/vnd.google-apps.document': 'gdoc', 'application/vnd.google-apps.spreadsheet': 'gsheet', 'application/vnd.google-apps.presentation': 'gslides', 'video/': 'video', 'image/': 'image', 'audio/': 'audio' };
+    for (const [k, v] of Object.entries(map)) { if (mimeType.startsWith(k)) return v; } return 'other';
   }
-
   function resetStorageUI() {
     selectedFiles.clear();
-    document.getElementById('storage-count-num').textContent = '0';
-    document.getElementById('storage-size-num').textContent  = '0 MB';
-    document.getElementById('storage-delete-btn').disabled   = true;
-    document.getElementById('storage-files-label').style.display  = 'none';
-    document.getElementById('storage-size-section').style.display = 'none';
-    document.getElementById('quota-wrap').style.display = 'none';
+    document.getElementById('storage-count-num').textContent = '0'; document.getElementById('storage-size-num').textContent = '0 MB'; document.getElementById('storage-delete-btn').disabled = true;
+    document.getElementById('storage-files-label').style.display = 'none'; document.getElementById('storage-size-section').style.display = 'none'; document.getElementById('quota-wrap').style.display = 'none';
   }
-
   function renderQuota(used, total, cls) {
-    const pct  = Math.min(Math.round(used / total * 100), 100);
-    const wrap = document.getElementById('quota-wrap');
-    wrap.style.display = 'block';
-    wrap.innerHTML = `
-      <div class="quota-row">
-        <span class="quota-label">Used storage</span>
-        <div class="quota-track"><div class="quota-fill ${cls}" style="width:${pct}%"></div></div>
-        <span class="quota-val">${formatSize(used)} / ${formatSize(total)}</span>
-      </div>
-    `;
+    const pct = Math.min(Math.round(used / total * 100), 100);
+    const wrap = document.getElementById('quota-wrap'); wrap.style.display = 'block';
+    wrap.innerHTML = `<div class="quota-row"><span class="quota-label">Used storage</span><div class="quota-track"><div class="quota-fill ${cls}" style="width:${pct}%"></div></div><span class="quota-val">${formatSize(used)} / ${formatSize(total)}</span></div>`;
   }
-
   function renderSizeBars(files, cls) {
-    const typeMap = {};
-    for (const f of files) { if (!typeMap[f.ext]) typeMap[f.ext] = 0; typeMap[f.ext] += f.size; }
-    const sorted = Object.entries(typeMap).sort((a, b) => b[1] - a[1]).slice(0, 6);
-    const max    = sorted[0]?.[1] || 1;
-    document.getElementById('storage-size-bars').innerHTML = sorted.map(([ext, size]) => `
-      <div class="size-bar-row">
-        <div class="size-bar-label">.${esc(ext)}</div>
-        <div class="size-bar-track"><div class="size-bar-fill ${cls}" style="width:${Math.round(size/max*100)}%"></div></div>
-        <div class="size-bar-val">${formatSize(size)}</div>
-      </div>
-    `).join('');
+    const typeMap = {}; files.forEach(f => { if (!typeMap[f.ext]) typeMap[f.ext] = 0; typeMap[f.ext] += f.size; });
+    const sorted = Object.entries(typeMap).sort((a, b) => b[1] - a[1]).slice(0, 6); const max = sorted[0]?.[1] || 1;
+    document.getElementById('storage-size-bars').innerHTML = sorted.map(([ext, size]) => `<div class="size-bar-row"><div class="size-bar-label">.${esc(ext)}</div><div class="size-bar-track"><div class="size-bar-fill ${cls}" style="width:${Math.round(size/max*100)}%"></div></div><div class="size-bar-val">${formatSize(size)}</div></div>`).join('');
   }
-
   function renderStorageFiles(files) {
-    const grid = document.getElementById('storage-grid');
-    grid.innerHTML = '';
-    for (const f of files) {
-      const card     = document.createElement('div');
-      card.className = 'item-card';
+    const grid = document.getElementById('storage-grid'); grid.innerHTML = '';
+    files.forEach(f => {
+      const card = document.createElement('div'); card.className = 'item-card';
       const modified = f.modified ? new Date(f.modified).toLocaleDateString() : '';
-      card.innerHTML = `
-        <div class="item-name">${esc(f.name)}</div>
-        <div class="item-sub">${esc(f.path.includes('/') ? f.path.substring(0, f.path.lastIndexOf('/')) : 'Root')}</div>
-        <div class="item-meta"><span class="meta-dot"></span>${formatSize(f.size)}${modified ? ' · ' + modified : ''}</div>
-      `;
-      card.addEventListener('click', () => toggleFile(card, f));
-      grid.appendChild(card);
-    }
+      card.innerHTML = `<div class="item-name">${esc(f.name)}</div><div class="item-sub">${esc(f.path.includes('/') ? f.path.substring(0, f.path.lastIndexOf('/')) : 'Root')}</div><div class="item-meta"><span class="meta-dot"></span>${formatSize(f.size)}${modified ? ' · ' + modified : ''}</div>`;
+      card.addEventListener('click', () => toggleFile(card, f)); grid.appendChild(card);
+    });
   }
-
   function toggleFile(card, file) {
     if (selectedFiles.has(file.id)) { selectedFiles.delete(file.id); card.classList.remove('selected'); }
     else { selectedFiles.set(file.id, file); card.classList.add('selected'); }
-    const n     = selectedFiles.size;
-    const bytes = Array.from(selectedFiles.values()).reduce((s, f) => s + f.size, 0);
-    document.getElementById('storage-count-num').textContent = n;
-    document.getElementById('storage-size-num').textContent  = formatSize(bytes);
-    document.getElementById('storage-delete-btn').disabled   = n === 0;
+    const n = selectedFiles.size, bytes = Array.from(selectedFiles.values()).reduce((s, f) => s + f.size, 0);
+    document.getElementById('storage-count-num').textContent = n; document.getElementById('storage-size-num').textContent = formatSize(bytes); document.getElementById('storage-delete-btn').disabled = n === 0;
   }
-
   async function runStorageDeletion() {
     if (!selectedFiles.size) return;
-    const btn = document.getElementById('storage-delete-btn');
-    btn.disabled    = true;
-    btn.textContent = 'Deleting...';
-    const logicAppUrl = currentProvider === 'microsoft' ? ONEDRIVE_LOGIC_APP : GDRIVE_LOGIC_APP;
-    const results     = [];
+    const btn = document.getElementById('storage-delete-btn'); btn.disabled = true; btn.textContent = 'Deleting...';
+    const results = [];
     for (const [fileId, file] of selectedFiles) {
-      try {
-        const resp = await fetch(logicAppUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ fileId, accessToken }) });
-        results.push({ name: file.name, ok: resp.ok || resp.status === 202 });
-      } catch (e) { results.push({ name: file.name, ok: false }); }
+      try { const resp = await fetch(currentProvider === 'microsoft' ? ONEDRIVE_LOGIC_APP : GDRIVE_LOGIC_APP, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ fileId, accessToken }) }); results.push({ name: file.name, ok: resp.ok || resp.status === 202 }); }
+      catch (e) { results.push({ name: file.name, ok: false }); }
     }
     showResult(results, 'Files deleted', 'Some files could not be deleted.');
   }
 
-  /* ══════════════════════════════════════════
-     MAIL TAB
-  ══════════════════════════════════════════ */
+  /* ══════════ MAIL TAB ══════════ */
   function groupSenders(messages) {
     const map = {};
-    for (const m of messages) {
-      if (!m.address) continue;
-      const domain = m.address.split('@')[1]?.toLowerCase();
-      if (!domain) continue;
-      if (!map[domain]) map[domain] = { name: cleanName(m.name || domain), domain: '@' + domain, count: 0 };
-      map[domain].count++;
-    }
+    messages.forEach(m => { if (!m.address) return; const domain = m.address.split('@')[1]?.toLowerCase(); if (!domain) return; if (!map[domain]) map[domain] = { name: cleanName(m.name || domain), domain: '@' + domain, count: 0 }; map[domain].count++; });
     return Object.values(map).sort((a, b) => b.count - a.count);
   }
-
-  function cleanName(name) {
-    return name.replace(/\s*(newsletter|noreply|no-reply|notifications?|updates?|info|support|team|help)\b.*/gi, '').trim() || name;
-  }
-
+  function cleanName(name) { return name.replace(/\s*(newsletter|noreply|no-reply|notifications?|updates?|info|support|team|help)\b.*/gi, '').trim() || name; }
   function setUserUI(email, provider) {
     const initials = email.slice(0, 2).toUpperCase();
-    const avatar   = document.getElementById('user-avatar');
-    avatar.textContent = initials;
-    avatar.className   = 'avatar ' + provider;
+    const avatar = document.getElementById('user-avatar'); avatar.textContent = initials; avatar.className = 'avatar ' + provider;
     document.getElementById('user-email-display').textContent = email;
-    const label = provider === 'google' ? 'Gmail' : 'Microsoft';
-    const cls   = provider === 'google' ? 'google' : 'microsoft';
-    document.getElementById('provider-badge-wrap').innerHTML = `<span class="provider-badge ${cls}">${label} account</span>`;
+    document.getElementById('provider-badge-wrap').innerHTML = `<span class="provider-badge ${provider === 'google' ? 'google' : 'microsoft'}">${provider === 'google' ? 'Gmail' : 'Microsoft'} account</span>`;
     currentAccount = currentAccount || { username: email, localAccountId: btoa(email).replace(/=/g, '') };
   }
-
   function renderSenders(senders) {
-    const grid = document.getElementById('sender-grid');
-    grid.innerHTML = '';
-    selectedSenders.clear();
-    document.getElementById('sel-count-num').textContent = '0';
-    document.getElementById('mail-delete-btn').disabled  = true;
+    const grid = document.getElementById('sender-grid'); grid.innerHTML = ''; selectedSenders.clear();
+    document.getElementById('sel-count-num').textContent = '0'; document.getElementById('mail-delete-btn').disabled = true;
     if (!senders.length) { grid.innerHTML = '<div class="empty-state">No senders found in your recent inbox.</div>'; return; }
-    for (const s of senders) {
-      const card     = document.createElement('div');
-      card.className = 'item-card';
-      card.innerHTML = `
-        <div class="item-name">${esc(s.name)}</div>
-        <div class="item-sub">${esc(s.domain)}</div>
-        <div class="item-meta"><span class="meta-dot"></span>${s.count} email${s.count !== 1 ? 's' : ''}</div>
-      `;
-      card.addEventListener('click', () => toggleSender(card, s.domain));
-      grid.appendChild(card);
-    }
+    senders.forEach(s => {
+      const card = document.createElement('div'); card.className = 'item-card';
+      card.innerHTML = `<div class="item-name">${esc(s.name)}</div><div class="item-sub">${esc(s.domain)}</div><div class="item-meta"><span class="meta-dot"></span>${s.count} email${s.count !== 1 ? 's' : ''}</div>`;
+      card.addEventListener('click', () => toggleSender(card, s.domain)); grid.appendChild(card);
+    });
   }
-
   function toggleSender(card, domain) {
     if (selectedSenders.has(domain)) { selectedSenders.delete(domain); card.classList.remove('selected'); }
     else { selectedSenders.add(domain); card.classList.add('selected'); }
-    const n = selectedSenders.size;
-    document.getElementById('sel-count-num').textContent = n;
-    document.getElementById('mail-delete-btn').disabled  = n === 0;
+    const n = selectedSenders.size; document.getElementById('sel-count-num').textContent = n; document.getElementById('mail-delete-btn').disabled = n === 0;
   }
-
   async function runMailDeletion() {
     if (!selectedSenders.size) return;
-    const btn = document.getElementById('mail-delete-btn');
-    btn.disabled    = true;
-    btn.textContent = 'Running...';
-    const userId  = currentAccount?.localAccountId || currentAccount?.homeAccountId || btoa(currentAccount?.username || 'user').replace(/=/g, '');
+    const btn = document.getElementById('mail-delete-btn'); btn.disabled = true; btn.textContent = 'Running...';
+    const userId = currentAccount?.localAccountId || currentAccount?.homeAccountId || btoa(userEmail || 'user').replace(/=/g, '');
     const results = [];
     for (const domain of Array.from(selectedSenders)) {
-      try {
-        const resp = await fetch(MAIL_LOGIC_APP, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ userId, senderDomain: domain, accessToken, provider: currentProvider }) });
-        results.push({ name: domain, ok: resp.ok || resp.status === 202 });
-      } catch (e) { results.push({ name: domain, ok: false }); }
+      try { const resp = await fetch(MAIL_LOGIC_APP, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ userId, senderDomain: domain, accessToken, provider: currentProvider }) }); results.push({ name: domain, ok: resp.ok || resp.status === 202 }); }
+      catch (e) { results.push({ name: domain, ok: false }); }
     }
     showResult(results, 'Deletion queued', 'Some deletions failed.');
   }
 
-  /* ══════════════════════════════════════════
-     RESULT
-  ══════════════════════════════════════════ */
+  /* ══════════ RESULT ══════════ */
   function showResult(results, successTitle, failTitle) {
-    const allOk    = results.every(r => r.ok);
+    const allOk = results.every(r => r.ok);
     const listHtml = results.map(r => `<div><span>${esc(r.name)}</span><span class="${r.ok ? 'status-ok' : 'status-fail'}">${r.ok ? 'done' : 'failed'}</span></div>`).join('');
     document.getElementById('result-card').innerHTML = `
       <div class="result-icon ${allOk ? 'success' : 'error'}">
-        ${allOk
-          ? '<svg width="22" height="22" fill="none" viewBox="0 0 22 22"><path d="M4 11l5 5L18 7" stroke="#3B6D11" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
-          : '<svg width="22" height="22" fill="none" viewBox="0 0 22 22"><path d="M11 7v5m0 4h.01" stroke="#A32D2D" stroke-width="2.2" stroke-linecap="round"/></svg>'
-        }
+        ${allOk ? '<svg width="22" height="22" fill="none" viewBox="0 0 22 22"><path d="M4 11l5 5L18 7" stroke="#3B6D11" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>' : '<svg width="22" height="22" fill="none" viewBox="0 0 22 22"><path d="M11 7v5m0 4h.01" stroke="#A32D2D" stroke-width="2.2" stroke-linecap="round"/></svg>'}
       </div>
       <h2>${allOk ? successTitle : failTitle}</h2>
       <p>${allOk ? 'The operation completed successfully.' : 'One or more items could not be processed. Check your Logic App run history for details.'}</p>
@@ -883,48 +658,27 @@
     `;
     show('result');
   }
-
   function resetAndBack() {
     selectedSenders.clear(); selectedFiles.clear(); selectedSPFiles.clear();
     document.querySelectorAll('.item-card').forEach(c => c.classList.remove('selected'));
-    document.getElementById('sel-count-num').textContent     = '0';
-    document.getElementById('mail-delete-btn').disabled      = true;
-    document.getElementById('mail-delete-btn').textContent   = 'Delete from inbox';
-    document.getElementById('storage-count-num').textContent = '0';
-    document.getElementById('storage-size-num').textContent  = '0 MB';
-    document.getElementById('storage-delete-btn').disabled   = true;
-    document.getElementById('storage-delete-btn').textContent = 'Delete files';
-    document.getElementById('sp-count-num').textContent      = '0';
-    document.getElementById('sp-size-num').textContent       = '0 MB';
-    document.getElementById('sp-delete-btn').disabled        = true;
-    document.getElementById('sp-delete-btn').textContent     = 'Delete files';
+    [['sel-count-num','0'],['storage-count-num','0'],['sp-count-num','0'],['storage-size-num','0 MB'],['sp-size-num','0 MB']].forEach(([id, v]) => document.getElementById(id).textContent = v);
+    ['mail-delete-btn','storage-delete-btn','sp-delete-btn'].forEach(id => { const b = document.getElementById(id); b.disabled = true; b.textContent = id === 'mail-delete-btn' ? 'Delete from inbox' : 'Delete files'; });
+    document.getElementById('report-status').style.display = 'none';
     show('main');
   }
-
   function signOut() {
-    if (confirm('Sign out of Mail Cleaner?')) {
-      currentAccount = null; accessToken = null; currentProvider = null; currentSiteId = null; currentDriveId = null;
-      selectedSenders.clear(); selectedFiles.clear(); selectedSPFiles.clear();
-      document.getElementById('storage-grid').innerHTML = '';
-      document.getElementById('sp-grid').innerHTML      = '';
-      document.getElementById('sp-site-wrap').style.display = 'none';
-      document.getElementById('sp-lib-wrap').style.display  = 'none';
-      document.getElementById('sp-note').style.display      = 'none';
-      show('login');
-    }
+    if (!confirm('Sign out of Mail Cleaner?')) return;
+    currentAccount = null; accessToken = null; currentProvider = null; userEmail = null; currentSiteId = null;
+    selectedSenders.clear(); selectedFiles.clear(); selectedSPFiles.clear();
+    ['storage-grid','sp-grid'].forEach(id => document.getElementById(id).innerHTML = '');
+    document.getElementById('sp-site-wrap').style.display = 'none'; document.getElementById('sp-lib-wrap').style.display = 'none'; document.getElementById('sp-note').style.display = 'none';
+    document.getElementById('report-status').style.display = 'none';
+    show('login');
   }
 
-  /* ── UTILS ── */
-  function formatSize(bytes) {
-    if (!bytes || bytes === 0) return '0 B';
-    if (bytes >= 1073741824) return (bytes / 1073741824).toFixed(1) + ' GB';
-    if (bytes >= 1048576)    return Math.round(bytes / 1048576) + ' MB';
-    if (bytes >= 1024)       return Math.round(bytes / 1024) + ' KB';
-    return bytes + ' B';
-  }
-  function esc(s) {
-    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
+  /* ══════════ UTILS ══════════ */
+  function formatSize(bytes) { if (!bytes) return '0 B'; if (bytes >= 1073741824) return (bytes/1073741824).toFixed(1)+' GB'; if (bytes >= 1048576) return Math.round(bytes/1048576)+' MB'; if (bytes >= 1024) return Math.round(bytes/1024)+' KB'; return bytes+' B'; }
+  function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 </script>
 </body>
 </html>
