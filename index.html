@@ -31,12 +31,16 @@
     .page { min-height: 100vh; display: flex; flex-direction: column; }
     .screen { display: none; flex: 1; }
     .screen.active { display: flex; flex-direction: column; }
-    .topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; background: var(--bg-card); border-bottom: 0.5px solid var(--border); }
+    .topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; background: var(--bg-card); border-bottom: 0.5px solid var(--border); gap: 12px; }
+    .topbar-left { display: flex; align-items: center; gap: 12px; }
     .logo { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 600; color: var(--text); }
     .logo-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--blue); }
+    .switch-account-btn { display: flex; align-items: center; gap: 6px; padding: 5px 12px; background: transparent; border: 0.5px solid var(--border-md); border-radius: 20px; font-size: 12px; color: var(--text-sec); cursor: pointer; transition: background .15s; white-space: nowrap; }
+    .switch-account-btn:hover { background: var(--bg-sec); }
+    .switch-account-btn svg { width: 13px; height: 13px; flex-shrink: 0; }
     .user-pill { display: flex; align-items: center; gap: 8px; background: var(--bg-sec); border: 0.5px solid var(--border); border-radius: 20px; padding: 5px 14px 5px 6px; font-size: 12px; color: var(--text-sec); cursor: pointer; transition: background .15s; }
     .user-pill:hover { background: var(--border); }
-    .avatar { width: 24px; height: 24px; border-radius: 50%; background: var(--blue-light); color: var(--blue-dark); font-size: 10px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
+    .avatar { width: 24px; height: 24px; border-radius: 50%; background: var(--blue-light); color: var(--blue-dark); font-size: 10px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .avatar.google { background: #fce8e6; color: #c5221f; }
     .tab-nav { display: flex; background: var(--bg-card); border-bottom: 0.5px solid var(--border); padding: 0 24px; overflow-x: auto; }
     .tab-btn { padding: 12px 16px; font-size: 13px; font-weight: 500; color: var(--text-sec); background: transparent; border: none; border-bottom: 2px solid transparent; cursor: pointer; transition: color .15s, border-color .15s; margin-bottom: -0.5px; white-space: nowrap; flex-shrink: 0; }
@@ -48,6 +52,11 @@
     .login-card { background: var(--bg-card); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 40px 36px; width: 100%; max-width: 420px; text-align: center; }
     .login-card h1 { font-size: 22px; font-weight: 600; margin-bottom: 8px; }
     .login-card p { font-size: 14px; color: var(--text-sec); margin-bottom: 28px; line-height: 1.6; }
+    .login-card.switch-mode { padding: 32px; }
+    .login-card.switch-mode h1 { font-size: 18px; }
+    .back-link { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; color: var(--text-sec); cursor: pointer; margin-bottom: 20px; background: none; border: none; }
+    .back-link:hover { color: var(--text); }
+    .back-link svg { width: 14px; height: 14px; }
     .provider-btns { display: flex; flex-direction: column; gap: 10px; }
     .ms-btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 11px 18px; background: var(--blue); color: #E6F1FB; border: none; border-radius: var(--radius-md); font-size: 14px; font-weight: 600; cursor: pointer; transition: opacity .15s; }
     .ms-btn:hover { opacity: .88; }
@@ -109,7 +118,6 @@
     .quota-fill.gd { background: #EA4335; }
     .quota-val { color: var(--text); font-weight: 500; flex-shrink: 0; }
     .info-note { font-size: 13px; color: var(--text-sec); padding: 20px 0; line-height: 1.6; }
-    /* Report tab */
     .report-panel { display: flex; flex-direction: column; gap: 16px; max-width: 560px; }
     .report-card { background: var(--bg-card); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 20px 22px; }
     .report-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
@@ -127,7 +135,6 @@
     .report-preview-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 0.5px solid var(--border); font-size: 13px; }
     .report-preview-row:last-child { border-bottom: none; }
     .report-preview-row span { color: var(--text-sec); }
-    /* Result */
     #screen-result { align-items: center; justify-content: center; padding: 40px 20px; }
     .result-card { background: var(--bg-card); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 36px 32px; width: 100%; max-width: 440px; text-align: center; }
     .result-icon { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; }
@@ -140,8 +147,8 @@
     .deleted-list div:last-child { border-bottom: none; }
     .status-ok { color: var(--green); font-weight: 600; font-size: 11px; }
     .status-fail { color: var(--red); font-weight: 600; font-size: 11px; }
-    .back-btn { padding: 9px 22px; background: transparent; border: 0.5px solid var(--border-md); border-radius: var(--radius-md); font-size: 13px; color: var(--text); cursor: pointer; transition: background .15s; }
-    .back-btn:hover { background: var(--bg-sec); }
+    .result-back-btn { padding: 9px 22px; background: transparent; border: 0.5px solid var(--border-md); border-radius: var(--radius-md); font-size: 13px; color: var(--text); cursor: pointer; transition: background .15s; }
+    .result-back-btn:hover { background: var(--bg-sec); }
     .empty-state { grid-column: 1 / -1; text-align: center; padding: 40px 20px; font-size: 14px; color: var(--text-sec); }
   </style>
 </head>
@@ -154,7 +161,7 @@
     <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:40px 20px;">
       <div class="login-card">
         <h1>Clean your inbox</h1>
-        <p>Sign in to delete unwanted emails, clean up your cloud storage, and get monthly inbox reports — all in one place.</p>
+        <p>Sign in to delete unwanted emails, clean up your cloud storage, and get monthly inbox reports.</p>
         <div class="provider-btns">
           <button class="ms-btn" onclick="startMicrosoftLogin()">
             <svg viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="9" height="9" fill="#F25022"/><rect x="11" y="1" width="9" height="9" fill="#7FBA00"/><rect x="1" y="11" width="9" height="9" fill="#00A4EF"/><rect x="11" y="11" width="9" height="9" fill="#FFB900"/></svg>
@@ -180,7 +187,13 @@
   <!-- MAIN -->
   <div class="screen" id="screen-main">
     <div class="topbar">
-      <div class="logo"><div class="logo-dot"></div>Mail cleaner</div>
+      <div class="topbar-left">
+        <div class="logo"><div class="logo-dot"></div>Mail cleaner</div>
+        <button class="switch-account-btn" onclick="showSwitchAccount()">
+          <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 8a6 6 0 1 0 12 0A6 6 0 0 0 2 8zm4-2.5a2 2 0 1 1 4 0 2 2 0 0 1-4 0zm2 4c-2.2 0-4 .9-4 2v.5a6 6 0 0 0 8 0V11.5c0-1.1-1.8-2-4-2z" fill="currentColor"/></svg>
+          Switch account
+        </button>
+      </div>
       <div class="user-pill" onclick="signOut()" title="Sign out">
         <div class="avatar" id="user-avatar">--</div>
         <span id="user-email-display">user</span>
@@ -261,7 +274,7 @@
         <div class="report-panel">
           <div class="report-card">
             <h3>Generate inbox report</h3>
-            <p>Analyse your inbox and receive a detailed report directly to your email — top senders, email volume, attachment count, and a summary of what Mail Cleaner has cleaned up for you.</p>
+            <p>Analyse your inbox and receive a detailed report directly to your email — email volume, attachment count, and a summary of what Mail Cleaner has cleaned up for you. Works for both Microsoft and Gmail accounts.</p>
             <button class="report-btn" id="report-btn" onclick="generateReport()">
               <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 2v10m0 0l-3-3m3 3l3-3M4 14v2a2 2 0 002 2h8a2 2 0 002-2v-2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
               Send report to my inbox
@@ -271,20 +284,43 @@
           <div class="report-card">
             <h3>Automatic monthly report</h3>
             <p>A report is automatically sent to your inbox on the 1st of every month once you have set up the scheduled Logic App — no action needed after that.</p>
-            <div class="schedule-info">
-              <div class="schedule-dot"></div>
-              <span>Scheduled: 1st of each month at 08:00</span>
-            </div>
+            <div class="schedule-info"><div class="schedule-dot"></div><span>Scheduled: 1st of each month at 08:00</span></div>
           </div>
           <div class="report-card">
             <h3>What the report contains</h3>
             <div>
               <div class="report-preview-row"><strong>Total emails scanned</strong><span>last 250 emails</span></div>
-              <div class="report-preview-row"><strong>Emails with attachments</strong><span>count</span></div>
+              <div class="report-preview-row"><strong>Emails with attachments</strong><span>count (Microsoft only)</span></div>
               <div class="report-preview-row"><strong>Senders deleted by Mail Cleaner</strong><span>from your rules</span></div>
               <div class="report-preview-row"><strong>Sent to</strong><span>your signed-in email</span></div>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SWITCH ACCOUNT -->
+  <div class="screen" id="screen-switch">
+    <div class="topbar"><div class="logo"><div class="logo-dot"></div>Mail cleaner</div></div>
+    <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:40px 20px;">
+      <div class="login-card switch-mode">
+        <button class="back-link" onclick="cancelSwitch()">
+          <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Back
+        </button>
+        <h1>Switch account</h1>
+        <p style="font-size:13px;margin-bottom:20px;">Currently signed in as <strong id="switch-current-email"></strong>. Sign in with a different account below.</p>
+        <div class="provider-btns">
+          <button class="ms-btn" onclick="startMicrosoftLogin(true)">
+            <svg viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="9" height="9" fill="#F25022"/><rect x="11" y="1" width="9" height="9" fill="#7FBA00"/><rect x="1" y="11" width="9" height="9" fill="#00A4EF"/><rect x="11" y="11" width="9" height="9" fill="#FFB900"/></svg>
+            Sign in with different Microsoft account
+          </button>
+          <div class="divider">or</div>
+          <button class="google-btn" onclick="startGoogleLogin(true)">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+            Sign in with different Google account
+          </button>
         </div>
       </div>
     </div>
@@ -327,16 +363,32 @@
     if (tab === 'sharepoint' && document.getElementById('sp-grid').children.length === 0) loadSharePointSites();
   }
 
+  /* ─── SWITCH ACCOUNT ─── */
+  function showSwitchAccount() { document.getElementById('switch-current-email').textContent = userEmail || 'unknown'; show('switch'); }
+  function cancelSwitch() { show('main'); }
+  function resetState() {
+    currentAccount = null; accessToken = null; currentProvider = null; userEmail = null; currentSiteId = null;
+    selectedSenders.clear(); selectedFiles.clear(); selectedSPFiles.clear();
+    ['storage-grid','sp-grid','sender-grid'].forEach(id => document.getElementById(id).innerHTML = '');
+    document.getElementById('sp-site-wrap').style.display = 'none';
+    document.getElementById('sp-note').style.display = 'none';
+    document.getElementById('report-status').style.display = 'none';
+    resetStorageUI();
+  }
+
   /* ══════════ MICROSOFT LOGIN ══════════ */
-  async function startMicrosoftLogin() {
+  async function startMicrosoftLogin(isSwitching = false) {
     try {
-      msalInstance = new msal.PublicClientApplication({ auth: { clientId: MS_CLIENT_ID, authority: 'https://login.microsoftonline.com/common', redirectUri: window.location.origin + window.location.pathname }, cache: { cacheLocation: 'sessionStorage' } });
-      await msalInstance.initialize();
-      setLoading('Opening Microsoft sign-in...');
-      const result = await msalInstance.loginPopup({ scopes: MS_SCOPES });
+      if (!msalInstance) {
+        msalInstance = new msal.PublicClientApplication({ auth: { clientId: MS_CLIENT_ID, authority: 'https://login.microsoftonline.com/common', redirectUri: window.location.origin + window.location.pathname }, cache: { cacheLocation: 'sessionStorage' } });
+        await msalInstance.initialize();
+      }
+      setLoading(isSwitching ? 'Switching Microsoft account...' : 'Opening Microsoft sign-in...');
+      if (isSwitching) resetState();
+      const result = await msalInstance.loginPopup({ scopes: MS_SCOPES, prompt: isSwitching ? 'select_account' : undefined });
       currentAccount = result.account; accessToken = result.accessToken; currentProvider = 'microsoft'; userEmail = result.account.username || '';
       await loadMicrosoftSenders();
-    } catch (e) { show('login'); if (e.errorCode !== 'user_cancelled') alert('Sign-in failed: ' + (e.message || e)); }
+    } catch (e) { isSwitching ? show('switch') : show('login'); if (e.errorCode !== 'user_cancelled') alert('Sign-in failed: ' + (e.message || e)); }
   }
   async function getMicrosoftToken() {
     try { const r = await msalInstance.acquireTokenSilent({ scopes: MS_SCOPES, account: currentAccount }); return r.accessToken; }
@@ -351,19 +403,21 @@
       if (!data.value) throw new Error(data.error?.message || 'Could not read inbox.');
       setUserUI(userEmail, 'microsoft');
       renderSenders(groupSenders(data.value.map(m => ({ address: m.from?.emailAddress?.address || '', name: m.from?.emailAddress?.name || '' }))));
+      updateTabVisibility();
       show('main');
     } catch (e) { show('login'); alert('Could not load inbox: ' + (e.message || e)); }
   }
 
   /* ══════════ GOOGLE LOGIN ══════════ */
-  function startGoogleLogin() {
-    setLoading('Opening Google sign-in...');
+  function startGoogleLogin(isSwitching = false) {
+    setLoading(isSwitching ? 'Switching Google account...' : 'Opening Google sign-in...');
+    if (isSwitching) resetState();
     google.accounts.oauth2.initTokenClient({
       client_id: GOOGLE_CLIENT_ID,
       scope: 'https://www.googleapis.com/auth/gmail.modify https://mail.google.com/ https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/drive.file',
-      prompt: 'consent',
+      prompt: 'consent select_account',
       callback: async (response) => {
-        if (response.error) { show('login'); alert('Google sign-in failed: ' + response.error); return; }
+        if (response.error) { isSwitching ? show('switch') : show('login'); alert('Google sign-in failed: ' + response.error); return; }
         accessToken = response.access_token; currentProvider = 'google';
         await loadGoogleSenders();
       }
@@ -392,30 +446,37 @@
       }
       setUserUI(userEmail, 'google');
       renderSenders(Object.values(senderMap).sort((a, b) => b.count - a.count));
-      document.getElementById('sp-tab-btn').style.opacity = '0.4';
+      updateTabVisibility();
       show('main');
     } catch (e) { show('login'); alert('Could not load Gmail: ' + (e.message || e)); }
   }
+
+  function updateTabVisibility() {
+    // Only SharePoint is Microsoft-only — Reports now works for both
+    document.getElementById('sp-tab-btn').style.opacity = currentProvider === 'microsoft' ? '1' : '0.4';
+  }
+
   function parseFromHeader(header) {
     const match = header.match(/^(.*?)\s*<([^>]+)>$/);
     return match ? { name: match[1].replace(/"/g, '').trim(), address: match[2].trim() } : { name: '', address: header.trim() };
   }
 
-  /* ══════════ REPORT TAB ══════════ */
+  /* ══════════ REPORT TAB — works for both providers ══════════ */
   async function generateReport() {
     const btn = document.getElementById('report-btn');
     const status = document.getElementById('report-status');
-    btn.disabled = true;
-    btn.textContent = 'Generating...';
-    status.className = 'report-status loading';
-    status.style.display = 'block';
+    btn.disabled = true; btn.textContent = 'Generating...';
+    status.className = 'report-status loading'; status.style.display = 'block';
     status.textContent = 'Contacting Logic App — this may take a moment...';
-    const userId = currentAccount?.localAccountId || currentAccount?.homeAccountId || btoa(userEmail || 'user').replace(/=/g, '');
     try {
+      // Always get a fresh Microsoft token — for Google use existing token
+      const freshToken = currentProvider === 'microsoft' ? await getMicrosoftToken() : accessToken;
+      accessToken = freshToken;
+      const userId = currentAccount?.localAccountId || currentAccount?.homeAccountId || btoa(userEmail || 'user').replace(/=/g, '');
       const resp = await fetch(REPORT_LOGIC_APP, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId, userEmail, accessToken, provider: currentProvider, month: new Date().toISOString().slice(0, 7) })
+        body: JSON.stringify({ userId, userEmail, accessToken: freshToken, provider: currentProvider, month: new Date().toISOString().slice(0, 7) })
       });
       if (resp.ok || resp.status === 202) {
         status.className = 'report-status success';
@@ -434,8 +495,7 @@
     const note = document.getElementById('sp-note'), siteWrap = document.getElementById('sp-site-wrap');
     if (currentProvider !== 'microsoft') { note.style.display = 'block'; note.textContent = 'SharePoint is only available for Microsoft accounts.'; return; }
     siteWrap.style.display = 'block';
-    const select = document.getElementById('sp-site-select');
-    select.innerHTML = '<option value="">Loading sites...</option>';
+    const select = document.getElementById('sp-site-select'); select.innerHTML = '<option value="">Loading sites...</option>';
     try {
       const token = await getMicrosoftToken(); accessToken = token;
       const data = await (await fetch('https://graph.microsoft.com/v1.0/sites?search=*&$select=id,displayName,webUrl&$top=50', { headers: { Authorization: 'Bearer ' + token } })).json();
@@ -460,8 +520,7 @@
   }
   async function loadSharePointFiles() {
     const driveId = document.getElementById('sp-lib-select').value; if (!driveId) return;
-    const grid = document.getElementById('sp-grid');
-    grid.innerHTML = '<div class="empty-state">Loading files...</div>';
+    const grid = document.getElementById('sp-grid'); grid.innerHTML = '<div class="empty-state">Loading files...</div>';
     document.getElementById('sp-files-label').style.display = 'none'; document.getElementById('sp-size-section').style.display = 'none';
     selectedSPFiles.clear(); updateSPActionBar();
     try {
@@ -654,26 +713,21 @@
       <h2>${allOk ? successTitle : failTitle}</h2>
       <p>${allOk ? 'The operation completed successfully.' : 'One or more items could not be processed. Check your Logic App run history for details.'}</p>
       <div class="deleted-list">${listHtml}</div>
-      <button class="back-btn" onclick="resetAndBack()">Back</button>
+      <button class="result-back-btn" onclick="resetAndBack()">Back</button>
     `;
     show('result');
   }
   function resetAndBack() {
     selectedSenders.clear(); selectedFiles.clear(); selectedSPFiles.clear();
     document.querySelectorAll('.item-card').forEach(c => c.classList.remove('selected'));
-    [['sel-count-num','0'],['storage-count-num','0'],['sp-count-num','0'],['storage-size-num','0 MB'],['sp-size-num','0 MB']].forEach(([id, v]) => document.getElementById(id).textContent = v);
+    [['sel-count-num','0'],['storage-count-num','0'],['sp-count-num','0'],['storage-size-num','0 MB'],['sp-size-num','0 MB']].forEach(([id,v]) => document.getElementById(id).textContent = v);
     ['mail-delete-btn','storage-delete-btn','sp-delete-btn'].forEach(id => { const b = document.getElementById(id); b.disabled = true; b.textContent = id === 'mail-delete-btn' ? 'Delete from inbox' : 'Delete files'; });
     document.getElementById('report-status').style.display = 'none';
     show('main');
   }
   function signOut() {
     if (!confirm('Sign out of Mail Cleaner?')) return;
-    currentAccount = null; accessToken = null; currentProvider = null; userEmail = null; currentSiteId = null;
-    selectedSenders.clear(); selectedFiles.clear(); selectedSPFiles.clear();
-    ['storage-grid','sp-grid'].forEach(id => document.getElementById(id).innerHTML = '');
-    document.getElementById('sp-site-wrap').style.display = 'none'; document.getElementById('sp-lib-wrap').style.display = 'none'; document.getElementById('sp-note').style.display = 'none';
-    document.getElementById('report-status').style.display = 'none';
-    show('login');
+    resetState(); msalInstance = null; show('login');
   }
 
   /* ══════════ UTILS ══════════ */
