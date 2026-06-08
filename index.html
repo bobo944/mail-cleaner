@@ -404,12 +404,12 @@
     try {
       accessToken = await getMicrosoftToken();
 
-      // Fetch mailbox folder size (inbox storage in bytes)
+      // Get mailbox storage size via drive quota (v1.0 — always works)
       try {
-        const folderRes = await fetch('https://graph.microsoft.com/beta/me/mailFolders/inbox?$select=totalItemCount,sizeInBytes', { headers: { Authorization: 'Bearer ' + accessToken } });
-        const folderData = await folderRes.json();
-        if (folderData.sizeInBytes !== undefined) {
-          renderMailQuota(folderData.sizeInBytes, 'ms');
+        const driveRes = await fetch('https://graph.microsoft.com/v1.0/me/drive', { headers: { Authorization: 'Bearer ' + accessToken } });
+        const driveData = await driveRes.json();
+        if (driveData.quota && driveData.quota.used) {
+          renderMailQuota(driveData.quota.used, driveData.quota.total, 'ms');
         }
       } catch(e) { /* quota not critical */ }
 
@@ -422,7 +422,7 @@
         if (!data.value) throw new Error(data.error?.message || 'Could not read inbox.');
         allMessages = allMessages.concat(data.value);
         nextUrl = allMessages.length < 1000 ? (data['@odata.nextLink'] || null) : null;
-        if (allMessages.length > 0) setLoading('Scanning inbox (' + allMessages.length + ' emails loaded)...');
+        setLoading('Scanning inbox (' + allMessages.length + ' emails loaded)...');
       }
 
       setUserUI(userEmail, 'microsoft');
@@ -453,14 +453,12 @@
       const profile = await (await fetch('https://www.googleapis.com/gmail/v1/users/me/profile', { headers: { Authorization: 'Bearer ' + accessToken } })).json();
       userEmail = profile.emailAddress || 'Gmail user';
 
-      // Gmail storage quota via Drive API about endpoint
+      // Get Gmail storage via Drive API quota (already have drive scope)
       try {
-        const quotaRes = await fetch('https://www.googleapis.com/drive/v3/about?fields=storageQuota', { headers: { Authorization: 'Bearer ' + accessToken } });
-        const quotaData = await quotaRes.json();
-        if (quotaData.storageQuota && quotaData.storageQuota.usageInDriveTrash !== undefined) {
-          // usageInDrive includes Gmail + Drive — we show total used
-          const gmailUsed = parseInt(quotaData.storageQuota.usage || 0);
-          if (gmailUsed > 0) renderMailQuota(gmailUsed, 'gd');
+        const aboutRes = await fetch('https://www.googleapis.com/drive/v3/about?fields=storageQuota', { headers: { Authorization: 'Bearer ' + accessToken } });
+        const aboutData = await aboutRes.json();
+        if (aboutData.storageQuota && aboutData.storageQuota.usage) {
+          renderMailQuota(parseInt(aboutData.storageQuota.usage), parseInt(aboutData.storageQuota.limit || 0), 'gd');
         }
       } catch(e) { /* quota not critical */ }
 
@@ -490,7 +488,7 @@
           if (!senderMap[domain]) senderMap[domain] = { name: parsed.name || domain, domain: '@' + domain, count: 0 };
           senderMap[domain].count++;
         }));
-        if (i % 100 === 0 && i > 0) setLoading('Reading senders (' + Math.min(i, allMessages.length) + ' / ' + allMessages.length + ')...');
+        if (i % 100 === 0 && i > 0) setLoading('Reading senders (' + Math.min(i + 20, allMessages.length) + ' / ' + allMessages.length + ')...');
       }
 
       setUserUI(userEmail, 'google');
@@ -674,15 +672,16 @@
     document.getElementById('storage-count-num').textContent = '0'; document.getElementById('storage-size-num').textContent = '0 MB'; document.getElementById('storage-delete-btn').disabled = true;
     document.getElementById('storage-files-label').style.display = 'none'; document.getElementById('storage-size-section').style.display = 'none'; document.getElementById('quota-wrap').style.display = 'none';
   }
-  function renderMailQuota(sizeBytes, provider) {
+  function renderMailQuota(used, total, cls) {
     const wrap = document.getElementById('mail-quota-wrap');
     if (!wrap) return;
     wrap.style.display = 'block';
-    const cls = provider === 'ms' ? 'ms' : 'gd';
+    const pct = total ? Math.min(Math.round(used / total * 100), 100) : 100;
+    const totalStr = total ? ' / ' + formatSize(total) : '';
     wrap.innerHTML = `<div class="quota-row">
-      <span class="quota-label">Indbakke størrelse</span>
-      <div class="quota-track"><div class="quota-fill ${cls}" style="width:100%"></div></div>
-      <span class="quota-val">${formatSize(sizeBytes)}</span>
+      <span class="quota-label">Lagerplads</span>
+      <div class="quota-track"><div class="quota-fill ${cls}" style="width:${pct}%"></div></div>
+      <span class="quota-val">${formatSize(used)}${totalStr}</span>
     </div>`;
   }
 
